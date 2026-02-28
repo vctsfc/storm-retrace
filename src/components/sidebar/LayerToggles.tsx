@@ -111,7 +111,11 @@ export function LayerToggles() {
   const setFollowStorm = useStormPathStore((s) => s.setFollowStorm);
 
   return (
-    <CollapsibleSection title="Layers" storageKey="layers">
+    <CollapsibleSection
+      title="Layers"
+      storageKey="layers"
+      helpText="Toggle NWS overlays on or off and adjust their opacity. Outlooks show the SPC convective outlook for the event day. Watches, Warnings, and Mesoscale Discussions (MDs) are fetched for the event time range. Enable Time-synced to show only overlays active at the current frame time. Reports show Local Storm Reports (LSRs). Surface Obs display ASOS/AWOS station data near the radar site."
+    >
       <div className="layer-toggles">
 
         {/* ── Radar Opacity ── */}

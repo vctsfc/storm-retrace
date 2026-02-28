@@ -27,7 +27,11 @@ export function Sidebar() {
   return (
     <div className="sidebar">
       {/* Event setup: date/time, site, and chase track import */}
-      <CollapsibleSection title="Event" storageKey="event">
+      <CollapsibleSection
+        title="Event"
+        storageKey="event"
+        helpText="Set the date, time window, and radar site for your event. Search for a NEXRAD site by ID or city name, then click Load Scans to fetch radar data. Use Import GPX to load a chase track. For storms crossing multiple radar sites, use Add Handoff Site to define transition points between sites."
+      >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <EventPicker />
           <SegmentEditor />
@@ -36,7 +40,11 @@ export function Sidebar() {
       </CollapsibleSection>
 
       {/* Radar controls + storm path drawing */}
-      <CollapsibleSection title="Radar" storageKey="radar">
+      <CollapsibleSection
+        title="Radar"
+        storageKey="radar"
+        helpText="Switch between Reflectivity (REF) and Velocity (VEL) products. Choose a color palette, adjust the elevation angle, and apply smoothing. Use Storm Path to draw waypoints on the map — the app calculates distance and bearing from your chase track to the storm. Re-render clears cached frames and redraws with current settings."
+      >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           <ProductSelector />
           <PaletteSelector />
@@ -71,7 +79,12 @@ export function Sidebar() {
       <BaseMapSwitcher />
 
       {/* Keyboard shortcuts reference */}
-      <CollapsibleSection title="Shortcuts" storageKey="shortcuts" defaultOpen={false}>
+      <CollapsibleSection
+        title="Shortcuts"
+        storageKey="shortcuts"
+        defaultOpen={false}
+        helpText="Keyboard shortcuts for controlling playback and radar settings. These work when the map or timeline has focus."
+      >
         <div style={{ fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.6 }}>
           <div><kbd>Space</kbd> Play/Pause</div>
           <div><kbd>←</kbd> / <kbd>→</kbd> Step frame</div>

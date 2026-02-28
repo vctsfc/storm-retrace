@@ -18,7 +18,12 @@ export function BaseMapSwitcher() {
   const setShowMoreLabels = useMapStore((s) => s.setShowMoreLabels);
 
   return (
-    <CollapsibleSection title="Base Map" storageKey="base-map" defaultOpen={false}>
+    <CollapsibleSection
+      title="Base Map"
+      storageKey="base-map"
+      defaultOpen={false}
+      helpText="Switch between Dark, Light, and Satellite base map styles. Enable More Town Labels to show additional place names on the map."
+    >
       <div className="product-selector">
         {MAP_STYLES.map((s) => (
           <button

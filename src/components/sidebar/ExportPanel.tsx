@@ -124,7 +124,12 @@ export function ExportPanel() {
   const handleExport = format === 'png' ? handleScreenshot : handleAnimation;
 
   return (
-    <CollapsibleSection title="Export" storageKey="export" defaultOpen={false}>
+    <CollapsibleSection
+      title="Export"
+      storageKey="export"
+      defaultOpen={false}
+      helpText="Save the current map view as a PNG screenshot, or export an animated GIF or MP4 video of the radar playback. Choose frame rate and playback speed for animations. If a loop range is set, you can export just that range. MP4 exports are compatible with video editors like DaVinci Resolve."
+    >
 
       <div className="export-panel">
         {/* Format selector */}
