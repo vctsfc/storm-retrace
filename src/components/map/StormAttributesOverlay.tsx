@@ -15,9 +15,16 @@ export function StormAttributesOverlay() {
 
   if (!stats || scanFiles.length === 0) return null;
 
-  const maxRefStr = stats.maxRef !== null ? `${stats.maxRef.toFixed(1)} dBZ` : '—';
-  const maxInStr = stats.maxInboundVel !== null ? `${stats.maxInboundVel.toFixed(1)} kts` : '—';
-  const maxOutStr = stats.maxOutboundVel !== null ? `${stats.maxOutboundVel.toFixed(1)} kts` : '—';
+  // Defensive: guard against malformed stats objects
+  const maxRef = typeof stats.maxRef === 'number' ? stats.maxRef : null;
+  const maxIn = typeof stats.maxInboundVel === 'number' ? stats.maxInboundVel : null;
+  const maxOut = typeof stats.maxOutboundVel === 'number' ? stats.maxOutboundVel : null;
+  const gates50 = typeof stats.gatesAbove50 === 'number' ? stats.gatesAbove50 : 0;
+  const gates60 = typeof stats.gatesAbove60 === 'number' ? stats.gatesAbove60 : 0;
+
+  const maxRefStr = maxRef !== null ? `${maxRef.toFixed(1)} dBZ` : '—';
+  const maxInStr = maxIn !== null ? `${maxIn.toFixed(1)} kts` : '—';
+  const maxOutStr = maxOut !== null ? `${maxOut.toFixed(1)} kts` : '—';
 
   return (
     <div className="storm-attrs-overlay">
@@ -30,10 +37,10 @@ export function StormAttributesOverlay() {
         <span className="storm-attrs-value storm-attrs-ref">{maxRefStr}</span>
 
         <span className="storm-attrs-label">Gates 50+</span>
-        <span className="storm-attrs-value">{stats.gatesAbove50.toLocaleString()}</span>
+        <span className="storm-attrs-value">{gates50.toLocaleString()}</span>
 
         <span className="storm-attrs-label">Gates 60+</span>
-        <span className="storm-attrs-value storm-attrs-severe">{stats.gatesAbove60.toLocaleString()}</span>
+        <span className="storm-attrs-value storm-attrs-severe">{gates60.toLocaleString()}</span>
 
         <span className="storm-attrs-label">Max In</span>
         <span className="storm-attrs-value storm-attrs-vel-in">{maxInStr}</span>

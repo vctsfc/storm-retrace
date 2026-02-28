@@ -218,8 +218,14 @@ self.onmessage = async (e: MessageEvent<WorkerRequest>) => {
     const blob = await (result.canvas as OffscreenCanvas).convertToBlob({ type: 'image/png' });
     const imageBuffer = await blob.arrayBuffer();
 
-    // Compute frame stats for the storm attributes overlay
-    const frameStats = computeFrameStats(parsed.radar, parsed.vcp, result.elevation);
+    // Compute frame stats for the storm attributes overlay.
+    // Wrapped separately so a stats failure doesn't lose the rendered frame.
+    let frameStats: WorkerResponse['payload']['frameStats'] | undefined;
+    try {
+      frameStats = computeFrameStats(parsed.radar, parsed.vcp, result.elevation);
+    } catch (statsErr) {
+      console.warn('[Worker] computeFrameStats failed:', statsErr);
+    }
 
     const response: WorkerResponse = {
       id,

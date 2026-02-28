@@ -233,6 +233,7 @@ export function EventPicker() {
 
     store.setLoading(true);
     store.setError(null);
+    store.setCurrentFrameStats(null); // Clear stale stats from previous event
 
     // Cancel any in-flight prefetch jobs and clear caches for new event.
     // This frees worker slots so the SAILS probe doesn't wait behind old jobs.
