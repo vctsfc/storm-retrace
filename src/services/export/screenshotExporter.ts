@@ -2,12 +2,20 @@
  * Screenshot exporter.
  *
  * Captures the current map canvas (basemap + radar + all overlay layers)
- * as a PNG image and triggers a browser download.
+ * as a PNG image and triggers a browser download. Optionally composites
+ * React overlay components (Storm Attributes, Radar Legend, Distance to
+ * Storm) onto the image based on export store settings.
  *
  * Requires `preserveDrawingBuffer: true` on the MapLibre map instance.
  */
 
 import type maplibregl from 'maplibre-gl';
+import { useExportStore } from '../../stores/exportStore';
+import {
+  compositeOverlays,
+  captureOverlayPositions,
+  type OverlayOptions,
+} from './overlayRenderer';
 
 /**
  * Capture the current map view as a PNG and download it.
@@ -24,10 +32,42 @@ export async function exportScreenshot(
   await waitForRender(map);
 
   const canvas = map.getCanvas();
-  const blob = await canvasToBlob(canvas);
+  const exportWidth = canvas.width;
+  const exportHeight = canvas.height;
 
+  // Read overlay options from store
+  const { showStormAttrs, showRadarLegend, showDistanceBearing } =
+    useExportStore.getState();
+  const overlayOptions: OverlayOptions = {
+    showStormAttrs,
+    showRadarLegend,
+    showDistanceBearing,
+  };
+  const anyOverlays = showStormAttrs || showRadarLegend || showDistanceBearing;
+
+  let exportCanvas: HTMLCanvasElement;
+  if (anyOverlays) {
+    const positions = captureOverlayPositions(canvas);
+    exportCanvas = compositeOverlays(
+      canvas,
+      positions,
+      overlayOptions,
+      exportWidth,
+      exportHeight,
+    );
+  } else {
+    exportCanvas = canvas;
+  }
+
+  const blob = await canvasToBlob(exportCanvas);
   const name = filename ?? `storm-replay-${formatTimestamp()}.png`;
   downloadBlob(blob, name);
+
+  // Clean up compositing canvas if created
+  if (exportCanvas !== canvas) {
+    exportCanvas.width = 0;
+    exportCanvas.height = 0;
+  }
 
   console.log(
     `[Export] Screenshot saved: ${name} (${canvas.width}×${canvas.height})`,

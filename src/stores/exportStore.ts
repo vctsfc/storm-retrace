@@ -19,12 +19,22 @@ export interface ExportState {
   /** Whether to export only the loop range (vs all frames) */
   useLoopRange: boolean;
 
+  /** Include storm attributes overlay in export */
+  showStormAttrs: boolean;
+  /** Include radar legend in export */
+  showRadarLegend: boolean;
+  /** Include distance-to-storm overlay in export */
+  showDistanceBearing: boolean;
+
   setFormat: (format: ExportFormat) => void;
   setFps: (fps: number) => void;
   setSpeed: (speed: number) => void;
   setExporting: (exporting: boolean) => void;
   setProgress: (progress: number, message?: string) => void;
   setUseLoopRange: (use: boolean) => void;
+  setShowStormAttrs: (show: boolean) => void;
+  setShowRadarLegend: (show: boolean) => void;
+  setShowDistanceBearing: (show: boolean) => void;
 }
 
 export const useExportStore = create<ExportState>()(
@@ -37,6 +47,9 @@ export const useExportStore = create<ExportState>()(
       progress: 0,
       progressMessage: '',
       useLoopRange: false,
+      showStormAttrs: true,
+      showRadarLegend: true,
+      showDistanceBearing: true,
 
       setFormat: (format) => set({ format }),
       setFps: (fps) => set({ fps }),
@@ -45,6 +58,9 @@ export const useExportStore = create<ExportState>()(
       setProgress: (progress, message) =>
         set({ progress, ...(message !== undefined ? { progressMessage: message } : {}) }),
       setUseLoopRange: (use) => set({ useLoopRange: use }),
+      setShowStormAttrs: (show) => set({ showStormAttrs: show }),
+      setShowRadarLegend: (show) => set({ showRadarLegend: show }),
+      setShowDistanceBearing: (show) => set({ showDistanceBearing: show }),
     }),
     {
       name: 'storm-replay-export',
@@ -53,6 +69,9 @@ export const useExportStore = create<ExportState>()(
         fps: state.fps,
         speed: state.speed,
         useLoopRange: state.useLoopRange,
+        showStormAttrs: state.showStormAttrs,
+        showRadarLegend: state.showRadarLegend,
+        showDistanceBearing: state.showDistanceBearing,
       }),
     },
   ),

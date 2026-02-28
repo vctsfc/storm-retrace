@@ -2,7 +2,8 @@
  * Animation exporter — MP4 (H.264) and GIF.
  *
  * Iterates through radar frames, captures the composited map canvas for each,
- * and encodes into a downloadable video file.
+ * and encodes into a downloadable video file. Optionally composites React
+ * overlay components (Storm Attributes, Radar Legend, Distance to Storm).
  *
  * MP4: WebCodecs VideoEncoder (H.264 High Profile) + mp4-muxer
  *   → DaVinci Resolve-compatible, high bitrate, up to 4K
@@ -20,7 +21,14 @@ import { Muxer, ArrayBufferTarget } from 'mp4-muxer';
 import { GIFEncoder, quantize, applyPalette } from 'gifenc';
 import { useTimelineStore } from '../../stores/timelineStore';
 import { useRadarStore } from '../../stores/radarStore';
+import { useExportStore } from '../../stores/exportStore';
 import { frameCache, FrameCache } from '../nexrad/frameCache';
+import {
+  captureOverlayPositions,
+  drawOverlaysOntoContext,
+  type OverlayOptions,
+  type OverlayPositions,
+} from './overlayRenderer';
 
 export interface AnimationOptions {
   map: maplibregl.Map;
@@ -73,12 +81,34 @@ export async function exportAnimation(opts: AnimationOptions): Promise<Animation
     `(${durationSeconds.toFixed(1)}s) — ${exportWidth}×${exportHeight}`,
   );
 
+  // Capture overlay options and positions once before export starts
+  const { showStormAttrs, showRadarLegend, showDistanceBearing } =
+    useExportStore.getState();
+  const overlayOptions: OverlayOptions = {
+    showStormAttrs,
+    showRadarLegend,
+    showDistanceBearing,
+  };
+  const anyOverlays = showStormAttrs || showRadarLegend || showDistanceBearing;
+  const overlayPositions = anyOverlays ? captureOverlayPositions(canvas) : null;
+
+  // Compute scale factor for overlay drawing
+  const mapContainer =
+    canvas.closest('.map-container') ?? canvas.parentElement!;
+  const overlayScale = canvas.width / mapContainer.getBoundingClientRect().width;
+
   onProgress(0, `Preparing ${format.toUpperCase()} export...`);
 
   if (format === 'mp4') {
-    return exportMP4(opts, exportWidth, exportHeight, videoFramesPerRadar, totalVideoFrames);
+    return exportMP4(
+      opts, exportWidth, exportHeight, videoFramesPerRadar, totalVideoFrames,
+      anyOverlays, overlayOptions, overlayPositions, overlayScale,
+    );
   } else {
-    return exportGIF(opts, exportWidth, exportHeight, videoFramesPerRadar, totalVideoFrames);
+    return exportGIF(
+      opts, exportWidth, exportHeight, videoFramesPerRadar, totalVideoFrames,
+      anyOverlays, overlayOptions, overlayPositions, overlayScale,
+    );
   }
 }
 
@@ -90,6 +120,10 @@ async function exportMP4(
   exportHeight: number,
   videoFramesPerRadar: number,
   totalVideoFrames: number,
+  anyOverlays: boolean,
+  overlayOptions: OverlayOptions,
+  overlayPositions: OverlayPositions | null,
+  overlayScale: number,
 ): Promise<AnimationResult> {
   const { map, fps, startIndex, endIndex, onProgress, signal } = opts;
   const canvas = map.getCanvas();
@@ -126,6 +160,16 @@ async function exportMP4(
     avc: { format: 'avc' },
   });
 
+  // Create reusable compositing canvas if overlays are enabled
+  let compCanvas: HTMLCanvasElement | null = null;
+  let compCtx: CanvasRenderingContext2D | null = null;
+  if (anyOverlays && overlayPositions) {
+    compCanvas = document.createElement('canvas');
+    compCanvas.width = exportWidth;
+    compCanvas.height = exportHeight;
+    compCtx = compCanvas.getContext('2d')!;
+  }
+
   let videoFrameIndex = 0;
 
   for (let radarIdx = startIndex; radarIdx <= endIndex; radarIdx++) {
@@ -133,14 +177,27 @@ async function exportMP4(
 
     // Set timeline to this frame and wait for it to render
     await setFrameAndWait(map, radarIdx);
+    // Ensure overlay data subscriptions have processed
+    await new Promise<void>((r) => requestAnimationFrame(() => r()));
 
-    // Capture the canvas as a VideoFrame and encode it for each video frame hold
+    // Determine the source canvas (composited or raw)
+    let sourceCanvas: HTMLCanvasElement;
+    if (compCanvas && compCtx && overlayPositions) {
+      compCtx.clearRect(0, 0, exportWidth, exportHeight);
+      compCtx.drawImage(canvas, 0, 0, exportWidth, exportHeight);
+      drawOverlaysOntoContext(compCtx, overlayPositions, overlayOptions, overlayScale);
+      sourceCanvas = compCanvas;
+    } else {
+      sourceCanvas = canvas;
+    }
+
+    // Capture as VideoFrame and encode for each video frame hold
     for (let hold = 0; hold < videoFramesPerRadar; hold++) {
       if (signal?.aborted) throw new DOMException('Export cancelled', 'AbortError');
 
       const timestampMicros = Math.round(videoFrameIndex * (1_000_000 / fps));
 
-      const frame = new VideoFrame(canvas, {
+      const frame = new VideoFrame(sourceCanvas, {
         timestamp: timestampMicros,
         visibleRect: { x: 0, y: 0, width: exportWidth, height: exportHeight },
       });
@@ -155,6 +212,12 @@ async function exportMP4(
 
     const progress = (radarIdx - startIndex + 1) / (endIndex - startIndex + 1);
     onProgress(progress * 0.9, `Encoding frame ${radarIdx - startIndex + 1}/${endIndex - startIndex + 1}...`);
+  }
+
+  // Clean up compositing canvas
+  if (compCanvas) {
+    compCanvas.width = 0;
+    compCanvas.height = 0;
   }
 
   onProgress(0.95, 'Finalizing MP4...');
@@ -190,6 +253,10 @@ async function exportGIF(
   exportHeight: number,
   videoFramesPerRadar: number,
   totalVideoFrames: number,
+  anyOverlays: boolean,
+  overlayOptions: OverlayOptions,
+  overlayPositions: OverlayPositions | null,
+  overlayScale: number,
 ): Promise<AnimationResult> {
   const { map, fps, startIndex, endIndex, onProgress, signal } = opts;
   const canvas = map.getCanvas();
@@ -200,9 +267,9 @@ async function exportGIF(
 
   // Scale down for GIF to keep file size reasonable (max 800px wide)
   const maxGifWidth = 800;
-  const scale = exportWidth > maxGifWidth ? maxGifWidth / exportWidth : 1;
-  const gifWidth = Math.round(exportWidth * scale);
-  const gifHeight = Math.round(exportHeight * scale);
+  const gifScale = exportWidth > maxGifWidth ? maxGifWidth / exportWidth : 1;
+  const gifWidth = Math.round(exportWidth * gifScale);
+  const gifHeight = Math.round(exportHeight * gifScale);
   // Ensure even dimensions
   const finalGifWidth = gifWidth % 2 === 0 ? gifWidth : gifWidth - 1;
   const finalGifHeight = gifHeight % 2 === 0 ? gifHeight : gifHeight - 1;
@@ -215,13 +282,33 @@ async function exportGIF(
   tempCanvas.height = finalGifHeight;
   const tempCtx = tempCanvas.getContext('2d')!;
 
+  // Create full-res compositing canvas if overlays are enabled
+  let compCanvas: HTMLCanvasElement | null = null;
+  let compCtx: CanvasRenderingContext2D | null = null;
+  if (anyOverlays && overlayPositions) {
+    compCanvas = document.createElement('canvas');
+    compCanvas.width = exportWidth;
+    compCanvas.height = exportHeight;
+    compCtx = compCanvas.getContext('2d')!;
+  }
+
   for (let radarIdx = startIndex; radarIdx <= endIndex; radarIdx++) {
     if (signal?.aborted) throw new DOMException('Export cancelled', 'AbortError');
 
     await setFrameAndWait(map, radarIdx);
+    // Ensure overlay data subscriptions have processed
+    await new Promise<void>((r) => requestAnimationFrame(() => r()));
 
-    // Draw scaled frame to temp canvas
-    tempCtx.drawImage(canvas, 0, 0, exportWidth, exportHeight, 0, 0, finalGifWidth, finalGifHeight);
+    // Draw composited or raw frame to temp canvas for GIF scaling
+    if (compCanvas && compCtx && overlayPositions) {
+      compCtx.clearRect(0, 0, exportWidth, exportHeight);
+      compCtx.drawImage(canvas, 0, 0, exportWidth, exportHeight);
+      drawOverlaysOntoContext(compCtx, overlayPositions, overlayOptions, overlayScale);
+      tempCtx.drawImage(compCanvas, 0, 0, exportWidth, exportHeight, 0, 0, finalGifWidth, finalGifHeight);
+    } else {
+      tempCtx.drawImage(canvas, 0, 0, exportWidth, exportHeight, 0, 0, finalGifWidth, finalGifHeight);
+    }
+
     const imageData = tempCtx.getImageData(0, 0, finalGifWidth, finalGifHeight);
 
     // Quantize to 256-color palette and encode frame
@@ -238,6 +325,12 @@ async function exportGIF(
 
     // Yield to keep UI responsive
     await new Promise((r) => setTimeout(r, 0));
+  }
+
+  // Clean up compositing canvas
+  if (compCanvas) {
+    compCanvas.width = 0;
+    compCanvas.height = 0;
   }
 
   onProgress(0.98, 'Finalizing GIF...');

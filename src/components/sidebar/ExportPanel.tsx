@@ -26,12 +26,18 @@ export function ExportPanel() {
   const progress = useExportStore((s) => s.progress);
   const progressMessage = useExportStore((s) => s.progressMessage);
   const useLoopRange = useExportStore((s) => s.useLoopRange);
+  const showStormAttrs = useExportStore((s) => s.showStormAttrs);
+  const showRadarLegend = useExportStore((s) => s.showRadarLegend);
+  const showDistanceBearing = useExportStore((s) => s.showDistanceBearing);
   const setFormat = useExportStore((s) => s.setFormat);
   const setFps = useExportStore((s) => s.setFps);
   const setSpeed = useExportStore((s) => s.setSpeed);
   const setExporting = useExportStore((s) => s.setExporting);
   const setProgress = useExportStore((s) => s.setProgress);
   const setUseLoopRange = useExportStore((s) => s.setUseLoopRange);
+  const setShowStormAttrs = useExportStore((s) => s.setShowStormAttrs);
+  const setShowRadarLegend = useExportStore((s) => s.setShowRadarLegend);
+  const setShowDistanceBearing = useExportStore((s) => s.setShowDistanceBearing);
 
   const frameTimes = useTimelineStore((s) => s.frameTimes);
   const loopStart = useTimelineStore((s) => s.loopStart);
@@ -155,6 +161,38 @@ export function ExportPanel() {
           {format === 'gif' && canvasWidth > 800 && (
             <span className="export-info-sub"> (GIF scaled to {Math.min(800, canvasWidth)}px wide)</span>
           )}
+        </div>
+
+        {/* Overlay include toggles */}
+        <div className="export-overlay-group">
+          <div className="export-overlay-label">Include in export</div>
+          <label className="export-row export-checkbox">
+            <input
+              type="checkbox"
+              checked={showStormAttrs}
+              onChange={(e) => setShowStormAttrs(e.target.checked)}
+              disabled={exporting}
+            />
+            <span>Storm Attributes</span>
+          </label>
+          <label className="export-row export-checkbox">
+            <input
+              type="checkbox"
+              checked={showRadarLegend}
+              onChange={(e) => setShowRadarLegend(e.target.checked)}
+              disabled={exporting}
+            />
+            <span>Radar Legend</span>
+          </label>
+          <label className="export-row export-checkbox">
+            <input
+              type="checkbox"
+              checked={showDistanceBearing}
+              onChange={(e) => setShowDistanceBearing(e.target.checked)}
+              disabled={exporting}
+            />
+            <span>Distance to Storm</span>
+          </label>
         </div>
 
         {/* Animation-specific controls */}

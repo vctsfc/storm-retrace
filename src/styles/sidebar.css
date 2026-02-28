@@ -724,6 +724,23 @@
   cursor: pointer;
 }
 
+.export-overlay-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 6px;
+  margin-top: 2px;
+  border-top: 1px solid var(--border-color);
+}
+
+.export-overlay-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
 .export-label {
   font-size: 11px;
   color: var(--text-secondary);
