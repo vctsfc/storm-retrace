@@ -8,6 +8,7 @@ import { fetchMCDs } from '../services/overlays/mcdService';
 import { fetchOutlook } from '../services/overlays/outlooksService';
 import { fetchLSRs } from '../services/overlays/lsrService';
 import { fetchNearbyStations, fetchObservations } from '../services/overlays/asosService';
+import { fetchTornadoTracks } from '../services/overlays/tornadoTracksService';
 
 /**
  * Format a UTC millisecond timestamp as the SPC convective-day date (YYYY-MM-DD).
@@ -68,6 +69,7 @@ export function useTimeSyncedOverlays() {
           overlay.setOutlooksLoading(true);
           overlay.setLSRsLoading(true);
           overlay.setSurfaceObsLoading(true);
+          overlay.setTornadoTracksLoading(true);
 
           // Compute outlook date from event start (convective day = 12Z–12Z)
           const outlookDate = formatConvectiveDay(startMs);
@@ -143,6 +145,21 @@ export function useTimeSyncedOverlays() {
               useOverlayStore.getState().setLSRsLoading(false);
             });
 
+          // Tornado tracks from NWS DAT (no time-sync, just fetch once)
+          const tornadoTracksP = fetchTornadoTracks(startMs, endMs)
+            .then((fc) => {
+              useOverlayStore.getState().setTornadoTracks(fc);
+              console.log(`[Overlays] ${fc.features.length} tornado tracks`);
+            })
+            .catch((e) => {
+              useOverlayStore.getState().setTornadoTracksError(
+                e instanceof Error ? e.message : 'Failed to fetch tornado tracks',
+              );
+            })
+            .finally(() => {
+              useOverlayStore.getState().setTornadoTracksLoading(false);
+            });
+
           // Surface observations — discover stations near all radar sites, then fetch obs
           // In multi-site mode, fetch nearby stations for each segment site (deduplicated)
           const radarState = useRadarStore.getState();
@@ -181,7 +198,7 @@ export function useTimeSyncedOverlays() {
                 useOverlayStore.getState().setSurfaceObsLoading(false);
               });
 
-          Promise.all([warningsP, watchesP, mcdsP, outlooksP, lsrsP, surfaceObsP]).finally(
+          Promise.all([warningsP, watchesP, mcdsP, outlooksP, lsrsP, surfaceObsP, tornadoTracksP]).finally(
             () => {
               fetchingRef.current = false;
             },

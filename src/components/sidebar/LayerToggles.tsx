@@ -95,6 +95,15 @@ export function LayerToggles() {
   const setSurfaceObsTimeSynced = useOverlayStore((s) => s.setSurfaceObsTimeSynced);
   const setSurfaceObsOpacity = useOverlayStore((s) => s.setSurfaceObsOpacity);
 
+  // ── Tornado Tracks ──
+  const tornadoTracksVisible = useOverlayStore((s) => s.tornadoTracksVisible);
+  const tornadoTracksLoading = useOverlayStore((s) => s.tornadoTracksLoading);
+  const tornadoTracksError = useOverlayStore((s) => s.tornadoTracksError);
+  const tornadoTracksCount = useOverlayStore((s) => s.tornadoTracks?.features.length ?? 0);
+  const tornadoTracksOpacity = useOverlayStore((s) => s.tornadoTracksOpacity);
+  const setTornadoTracksVisible = useOverlayStore((s) => s.setTornadoTracksVisible);
+  const setTornadoTracksOpacity = useOverlayStore((s) => s.setTornadoTracksOpacity);
+
   // ── Chase Tracks ──
   const tracksCount = useTrackStore((s) => s.tracks.length);
   const tracksVisible = useTrackStore((s) => s.tracksVisible);
@@ -326,6 +335,30 @@ export function LayerToggles() {
             </label>
           )}
           {surfaceObsError && <div className="error-message">{surfaceObsError}</div>}
+        </div>
+
+        {/* ── Tornado Tracks ── */}
+        <div className="layer-toggle-group">
+          <div className="layer-toggle-header">
+            <label className="layer-toggle-row">
+              <input
+                type="checkbox"
+                checked={tornadoTracksVisible}
+                onChange={(e) => setTornadoTracksVisible(e.target.checked)}
+              />
+              <span className="layer-toggle-label">
+                Tornado Tracks
+                {tornadoTracksLoading && <span className="layer-badge loading">...</span>}
+                {!tornadoTracksLoading && tornadoTracksCount > 0 && (
+                  <span className="layer-badge count">{tornadoTracksCount}</span>
+                )}
+              </span>
+            </label>
+            {tornadoTracksVisible && (
+              <OpacitySlider value={tornadoTracksOpacity} onChange={setTornadoTracksOpacity} />
+            )}
+          </div>
+          {tornadoTracksError && <div className="error-message">{tornadoTracksError}</div>}
         </div>
 
         {/* ── Chase Tracks ── */}

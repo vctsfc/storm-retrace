@@ -263,6 +263,20 @@ export interface OverlayState {
   setSurfaceObsOpacity: (opacity: number) => void;
   clearSurfaceObs: () => void;
 
+  // ── Tornado Tracks (NWS DAT) ──
+  tornadoTracks: GeoJSON.FeatureCollection | null;
+  tornadoTracksLoading: boolean;
+  tornadoTracksError: string | null;
+  tornadoTracksVisible: boolean;
+  tornadoTracksOpacity: number;
+
+  setTornadoTracks: (data: GeoJSON.FeatureCollection | null) => void;
+  setTornadoTracksLoading: (loading: boolean) => void;
+  setTornadoTracksError: (error: string | null) => void;
+  setTornadoTracksVisible: (visible: boolean) => void;
+  setTornadoTracksOpacity: (opacity: number) => void;
+  clearTornadoTracks: () => void;
+
   // ── Bulk actions ──
   clearAllOverlays: () => void;
 }
@@ -366,6 +380,20 @@ export const useOverlayStore = create<OverlayState>()(
   setSurfaceObsOpacity: (opacity) => set({ surfaceObsOpacity: opacity }),
   clearSurfaceObs: () => set({ surfaceObs: [], surfaceObsStations: [], surfaceObsError: null }),
 
+  // ── Tornado Tracks (NWS DAT) ──
+  tornadoTracks: null,
+  tornadoTracksLoading: false,
+  tornadoTracksError: null,
+  tornadoTracksVisible: false,
+  tornadoTracksOpacity: 0.9,
+
+  setTornadoTracks: (data) => set({ tornadoTracks: data }),
+  setTornadoTracksLoading: (loading) => set({ tornadoTracksLoading: loading }),
+  setTornadoTracksError: (error) => set({ tornadoTracksError: error }),
+  setTornadoTracksVisible: (visible) => set({ tornadoTracksVisible: visible }),
+  setTornadoTracksOpacity: (opacity) => set({ tornadoTracksOpacity: opacity }),
+  clearTornadoTracks: () => set({ tornadoTracks: null, tornadoTracksError: null }),
+
   // ── Bulk actions ──
   clearAllOverlays: () =>
     set({
@@ -382,6 +410,8 @@ export const useOverlayStore = create<OverlayState>()(
       surfaceObs: [],
       surfaceObsStations: [],
       surfaceObsError: null,
+      tornadoTracks: null,
+      tornadoTracksError: null,
     }),
     }),
     {
@@ -405,6 +435,8 @@ export const useOverlayStore = create<OverlayState>()(
         surfaceObsVisible: state.surfaceObsVisible,
         surfaceObsTimeSynced: state.surfaceObsTimeSynced,
         surfaceObsOpacity: state.surfaceObsOpacity,
+        tornadoTracksVisible: state.tornadoTracksVisible,
+        tornadoTracksOpacity: state.tornadoTracksOpacity,
       }),
     },
   ),

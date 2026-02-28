@@ -19,6 +19,7 @@ import { RadarLegend } from '../map/RadarLegend';
 import { StormAttributesOverlay } from '../map/StormAttributesOverlay';
 import { DistanceBearingLayer } from '../map/DistanceBearingLayer';
 import { DistanceBearingOverlay } from '../map/DistanceBearingOverlay';
+import { TornadoTracksLayer } from '../map/TornadoTracksLayer';
 import { TitleBar } from './TitleBar';
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts';
 import { useRadarPlayback } from '../../hooks/useRadarPlayback';
@@ -62,6 +63,7 @@ export function AppShell() {
           <MapContainer onMapReady={handleMapReady}>
             <OutlooksLayer />
             <RadarLayer />
+            <TornadoTracksLayer />
             <WatchesLayer />
             <WarningsLayer />
             <MCDLayer />
