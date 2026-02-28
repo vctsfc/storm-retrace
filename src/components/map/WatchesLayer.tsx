@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useMap } from './MapContext';
 import { useOverlayStore, type SPCWatch } from '../../stores/overlayStore';
 import { useTimelineStore } from '../../stores/timelineStore';
+import { isMapUsable } from '../../utils/mapSafety';
 
 const WATCHES_SOURCE_ID = 'spc-watches';
 const WATCHES_FILL_LAYER_ID = 'spc-watches-fill';
@@ -128,7 +129,7 @@ export function WatchesLayer() {
     };
 
     const applyOpacity = () => {
-      if (!addedRef.current) return;
+      if (!addedRef.current || !isMapUsable(map)) return;
       const { watchesOpacity } = useOverlayStore.getState();
       if (map.getLayer(WATCHES_FILL_LAYER_ID)) {
         map.setPaintProperty(WATCHES_FILL_LAYER_ID, 'fill-opacity', [
@@ -143,7 +144,7 @@ export function WatchesLayer() {
     };
 
     const applyVisibilityAndFilter = () => {
-      if (!addedRef.current) return;
+      if (!addedRef.current || !isMapUsable(map)) return;
 
       const { watchesVisible, watchesTimeSynced } = useOverlayStore.getState();
       const visibility = watchesVisible ? 'visible' : 'none';
@@ -220,7 +221,7 @@ export function WatchesLayer() {
       unsubOverlay();
       unsubTimeline();
       if (filterRafId !== null) cancelAnimationFrame(filterRafId);
-      map.off('style.load', onStyleLoad);
+      try { map.off('style.load', onStyleLoad); } catch { /* map destroyed */ }
     };
   }, [map]);
 

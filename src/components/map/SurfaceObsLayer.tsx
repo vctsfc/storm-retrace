@@ -21,6 +21,7 @@ import { useMap } from './MapContext';
 import { useOverlayStore, type SurfaceObservation } from '../../stores/overlayStore';
 import { useTimelineStore } from '../../stores/timelineStore';
 import { registerWindBarbIcons, getWindBarbIconId } from '../../utils/windBarb';
+import { isMapUsable } from '../../utils/mapSafety';
 
 const SOURCE_ID = 'surface-obs';
 const BARB_LAYER_ID = 'surface-obs-barbs';
@@ -272,7 +273,7 @@ export function SurfaceObsLayer() {
     };
 
     const doUpdate = () => {
-      if (!addedRef.current) return;
+      if (!addedRef.current || !isMapUsable(map)) return;
       const source = map.getSource(SOURCE_ID);
       if (source && 'setData' in source) {
         (source as any).setData(buildCurrentGeoJSON());
@@ -305,7 +306,7 @@ export function SurfaceObsLayer() {
     };
 
     const applyVisibility = () => {
-      if (!addedRef.current) return;
+      if (!addedRef.current || !isMapUsable(map)) return;
       const { surfaceObsVisible } = useOverlayStore.getState();
       const visibility = surfaceObsVisible ? 'visible' : 'none';
       for (const layerId of [BARB_LAYER_ID, TEMP_LAYER_ID, DEWP_LAYER_ID]) {
@@ -316,7 +317,7 @@ export function SurfaceObsLayer() {
     };
 
     const applyOpacity = () => {
-      if (!addedRef.current) return;
+      if (!addedRef.current || !isMapUsable(map)) return;
       const { surfaceObsOpacity } = useOverlayStore.getState();
       if (map.getLayer(BARB_LAYER_ID)) {
         map.setPaintProperty(BARB_LAYER_ID, 'icon-opacity', surfaceObsOpacity);
@@ -423,6 +424,7 @@ export function SurfaceObsLayer() {
     map.on('style.load', onStyleLoad);
 
     const bindEvents = () => {
+      if (!isMapUsable(map)) return;
       if (map.getLayer(BARB_LAYER_ID)) {
         map.on('click', BARB_LAYER_ID, onFeatureClick);
         map.on('mouseenter', BARB_LAYER_ID, onMouseEnter);
@@ -439,13 +441,15 @@ export function SurfaceObsLayer() {
         clearTimeout(pendingUpdateRef.current);
         pendingUpdateRef.current = null;
       }
-      map.off('style.load', onStyleLoad);
-      map.off('sourcedata', bindEvents);
-      if (map.getLayer(BARB_LAYER_ID)) {
-        map.off('click', BARB_LAYER_ID, onFeatureClick);
-        map.off('mouseenter', BARB_LAYER_ID, onMouseEnter);
-        map.off('mouseleave', BARB_LAYER_ID, onMouseLeave);
-      }
+      try {
+        map.off('style.load', onStyleLoad);
+        map.off('sourcedata', bindEvents);
+        if (map.getLayer(BARB_LAYER_ID)) {
+          map.off('click', BARB_LAYER_ID, onFeatureClick);
+          map.off('mouseenter', BARB_LAYER_ID, onMouseEnter);
+          map.off('mouseleave', BARB_LAYER_ID, onMouseLeave);
+        }
+      } catch { /* map destroyed */ }
       popupRef.current?.remove();
     };
   }, [map]);

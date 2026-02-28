@@ -3,6 +3,7 @@ import maplibregl from 'maplibre-gl';
 import { useMap } from './MapContext';
 import { useOverlayStore, type NWSWarning } from '../../stores/overlayStore';
 import { useTimelineStore } from '../../stores/timelineStore';
+import { isMapUsable } from '../../utils/mapSafety';
 
 const WARNINGS_SOURCE_ID = 'nws-warnings';
 const WARNINGS_FILL_LAYER_ID = 'nws-warnings-fill';
@@ -133,7 +134,7 @@ export function WarningsLayer() {
     };
 
     const applyOpacity = () => {
-      if (!addedRef.current) return;
+      if (!addedRef.current || !isMapUsable(map)) return;
       const { warningsOpacity } = useOverlayStore.getState();
       if (map.getLayer(WARNINGS_FILL_LAYER_ID)) {
         map.setPaintProperty(WARNINGS_FILL_LAYER_ID, 'fill-opacity', [
@@ -151,7 +152,7 @@ export function WarningsLayer() {
      * Apply current visibility and time filter based on store state.
      */
     const applyVisibilityAndFilter = () => {
-      if (!addedRef.current) return;
+      if (!addedRef.current || !isMapUsable(map)) return;
 
       const { warningsVisible, warningsTimeSynced } = useOverlayStore.getState();
       const visibility = warningsVisible ? 'visible' : 'none';
@@ -235,7 +236,7 @@ export function WarningsLayer() {
       unsubOverlay();
       unsubTimeline();
       if (filterRafId !== null) cancelAnimationFrame(filterRafId);
-      map.off('style.load', onStyleLoad);
+      try { map.off('style.load', onStyleLoad); } catch { /* map destroyed */ }
     };
   }, [map]);
 

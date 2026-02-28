@@ -16,6 +16,7 @@ import { useTrackStore } from '../../stores/trackStore';
 import { useStormPathStore, type StormWaypoint } from '../../stores/stormPathStore';
 import { useTimelineStore } from '../../stores/timelineStore';
 import { haversineDistance, calculateBearing, bearingToCardinal, kmToMiles } from '../../utils/geo';
+import { isMapUsable } from '../../utils/mapSafety';
 import type { TrackPoint } from '../../services/gps/gpxParser';
 
 const LINE_SOURCE = 'distance-bearing-line';
@@ -121,7 +122,7 @@ export function DistanceBearingLayer() {
 
   const updateLine = useCallback(() => {
     const currentMap = map;
-    if (!currentMap) return;
+    if (!isMapUsable(currentMap)) return;
 
     const { currentIndex, frameTimes } = useTimelineStore.getState();
     const targetMs = frameTimes[currentIndex] ?? 0;
@@ -195,6 +196,7 @@ export function DistanceBearingLayer() {
 
     const ensureLayer = () => {
       if (layerAddedRef.current) return;
+      if (!isMapUsable(map)) return;
       if (!map.isStyleLoaded()) return;
 
       if (!map.getSource(LINE_SOURCE)) {
@@ -266,11 +268,13 @@ export function DistanceBearingLayer() {
       unsubStorm();
       unsubTrack();
       cancelAnimationFrame(rafRef.current);
-      map.off('style.load', onStyleLoad);
       setDistanceBearingData(null);
-      if (map.getLayer(LINE_LAYER)) map.removeLayer(LINE_LAYER);
-      if (map.getSource(LINE_SOURCE)) map.removeSource(LINE_SOURCE);
       layerAddedRef.current = false;
+      try {
+        map.off('style.load', onStyleLoad);
+        if (map.getLayer(LINE_LAYER)) map.removeLayer(LINE_LAYER);
+        if (map.getSource(LINE_SOURCE)) map.removeSource(LINE_SOURCE);
+      } catch { /* map already destroyed */ }
     };
   }, [map, updateLine]);
 

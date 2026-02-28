@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useMap } from './MapContext';
 import { useOverlayStore, type ConvectiveOutlook } from '../../stores/overlayStore';
+import { isMapUsable } from '../../utils/mapSafety';
 
 const OUTLOOK_SOURCE_ID = 'spc-outlooks';
 const OUTLOOK_FILL_LAYER_ID = 'spc-outlooks-fill';
@@ -99,7 +100,7 @@ export function OutlooksLayer() {
     };
 
     const applyOpacity = () => {
-      if (!addedRef.current) return;
+      if (!addedRef.current || !isMapUsable(map)) return;
       const { outlooksOpacity } = useOverlayStore.getState();
       if (map.getLayer(OUTLOOK_FILL_LAYER_ID)) {
         map.setPaintProperty(OUTLOOK_FILL_LAYER_ID, 'fill-opacity', 0.2 * outlooksOpacity);
@@ -107,7 +108,7 @@ export function OutlooksLayer() {
     };
 
     const applyVisibility = () => {
-      if (!addedRef.current) return;
+      if (!addedRef.current || !isMapUsable(map)) return;
       const { outlooksVisible } = useOverlayStore.getState();
       const visibility = outlooksVisible ? 'visible' : 'none';
       if (map.getLayer(OUTLOOK_FILL_LAYER_ID)) {
@@ -147,7 +148,7 @@ export function OutlooksLayer() {
 
     return () => {
       unsubOverlay();
-      map.off('style.load', onStyleLoad);
+      try { map.off('style.load', onStyleLoad); } catch { /* map destroyed */ }
     };
   }, [map]);
 

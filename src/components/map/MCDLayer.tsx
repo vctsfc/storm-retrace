@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useMap } from './MapContext';
 import { useOverlayStore, type MesoscaleDiscussion } from '../../stores/overlayStore';
 import { useTimelineStore } from '../../stores/timelineStore';
+import { isMapUsable } from '../../utils/mapSafety';
 
 const MCD_SOURCE_ID = 'spc-mcds';
 const MCD_FILL_LAYER_ID = 'spc-mcds-fill';
@@ -106,7 +107,7 @@ export function MCDLayer() {
     };
 
     const applyOpacity = () => {
-      if (!addedRef.current) return;
+      if (!addedRef.current || !isMapUsable(map)) return;
       const { mcdsOpacity } = useOverlayStore.getState();
       if (map.getLayer(MCD_FILL_LAYER_ID)) {
         map.setPaintProperty(MCD_FILL_LAYER_ID, 'fill-opacity', 0.15 * mcdsOpacity);
@@ -117,7 +118,7 @@ export function MCDLayer() {
     };
 
     const applyVisibilityAndFilter = () => {
-      if (!addedRef.current) return;
+      if (!addedRef.current || !isMapUsable(map)) return;
 
       const { mcdsVisible, mcdsTimeSynced } = useOverlayStore.getState();
       const visibility = mcdsVisible ? 'visible' : 'none';
@@ -194,7 +195,7 @@ export function MCDLayer() {
       unsubOverlay();
       unsubTimeline();
       if (filterRafId !== null) cancelAnimationFrame(filterRafId);
-      map.off('style.load', onStyleLoad);
+      try { map.off('style.load', onStyleLoad); } catch { /* map destroyed */ }
     };
   }, [map]);
 

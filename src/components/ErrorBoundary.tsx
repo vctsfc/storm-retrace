@@ -7,6 +7,7 @@ interface Props {
 interface State {
   hasError: boolean;
   error: Error | null;
+  componentStack: string | null;
 }
 
 /**
@@ -16,15 +17,16 @@ interface State {
 export class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = { hasError: false, error: null, componentStack: null };
   }
 
-  static getDerivedStateFromError(error: Error): State {
+  static getDerivedStateFromError(error: Error): Partial<State> {
     return { hasError: true, error };
   }
 
   componentDidCatch(error: Error, info: React.ErrorInfo) {
     console.error('[ErrorBoundary] Uncaught rendering error:', error, info.componentStack);
+    this.setState({ componentStack: info.componentStack ?? null });
   }
 
   render() {
@@ -46,6 +48,24 @@ export class ErrorBoundary extends Component<Props, State> {
           <p style={{ color: '#aaa', marginBottom: '1.5rem', maxWidth: 500 }}>
             {this.state.error?.message || 'An unexpected error occurred.'}
           </p>
+          {this.state.componentStack && (
+            <pre style={{
+              color: '#888',
+              fontSize: '0.7rem',
+              maxWidth: 600,
+              maxHeight: 200,
+              overflow: 'auto',
+              textAlign: 'left',
+              background: '#111',
+              padding: '0.75rem',
+              borderRadius: 4,
+              marginBottom: '1.5rem',
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-word',
+            }}>
+              {this.state.componentStack}
+            </pre>
+          )}
           <button
             onClick={() => {
               this.setState({ hasError: false, error: null });

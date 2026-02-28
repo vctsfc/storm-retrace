@@ -15,6 +15,7 @@ import { useMap } from './MapContext';
 import { useTrackStore, type ChaseTrack } from '../../stores/trackStore';
 import { useTimelineStore } from '../../stores/timelineStore';
 import type { TrackPoint } from '../../services/gps/gpxParser';
+import { isMapUsable } from '../../utils/mapSafety';
 
 const POSITION_SOURCE_ID = 'chase-track-positions';
 const POSITION_LAYER_ID = 'chase-track-pos';
@@ -357,14 +358,17 @@ export function ChaseTrackLayer() {
     const removeTrackLine = (trackId: string) => {
       const srcId = trackLineSourceId(trackId);
       const layId = trackLineLayerId(trackId);
-      if (map.getLayer(layId)) map.removeLayer(layId);
-      if (map.getSource(srcId)) map.removeSource(srcId);
+      try {
+        if (map.getLayer(layId)) map.removeLayer(layId);
+        if (map.getSource(srcId)) map.removeSource(srcId);
+      } catch { /* map destroyed */ }
       addedTrackIdsRef.current.delete(trackId);
     };
 
     /* ── Layer ordering ───────────────────────────────────────── */
 
     const ensureLayerOrder = () => {
+      if (!isMapUsable(map)) return;
       // Move trail lines above all data layers, position arrow on absolute top
       for (const id of addedTrackIdsRef.current) {
         const layId = trackLineLayerId(id);
@@ -377,6 +381,7 @@ export function ChaseTrackLayer() {
 
     const updatePositionsAndTrails = () => {
       if (!positionLayerAddedRef.current) return;
+      if (!isMapUsable(map)) return;
 
       const { tracks, tracksVisible, tracksOpacity, showTrail, followTrack } = useTrackStore.getState();
       const { currentIndex, frameTimes } = useTimelineStore.getState();
@@ -437,6 +442,7 @@ export function ChaseTrackLayer() {
     /* ── Visibility + opacity ─────────────────────────────────── */
 
     const applyTrackVisibility = () => {
+      if (!isMapUsable(map)) return;
       const { tracks, tracksVisible, tracksOpacity, showTrail } = useTrackStore.getState();
 
       for (const track of tracks) {
@@ -463,7 +469,7 @@ export function ChaseTrackLayer() {
     /* ── Sync tracks with map ─────────────────────────────────── */
 
     const syncTracks = () => {
-      if (!map.isStyleLoaded()) return;
+      if (!isMapUsable(map) || !map.isStyleLoaded()) return;
 
       ensurePositionLayer();
 
@@ -544,8 +550,10 @@ export function ChaseTrackLayer() {
       unsubTracks();
       unsubTimeline();
       if (positionRafId !== null) cancelAnimationFrame(positionRafId);
-      map.off('style.load', onStyleLoad);
-      map.off('dragstart', onDragStart);
+      try {
+        map.off('style.load', onStyleLoad);
+        map.off('dragstart', onDragStart);
+      } catch { /* map destroyed */ }
     };
   }, [map]);
 

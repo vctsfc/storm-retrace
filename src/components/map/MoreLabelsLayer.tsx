@@ -239,7 +239,7 @@ export function MoreLabelsLayer() {
     }
 
     return () => {
-      map.off('style.load', onStyleLoad);
+      try { map.off('style.load', onStyleLoad); } catch { /* map destroyed */ }
     };
   }, [map]);
 

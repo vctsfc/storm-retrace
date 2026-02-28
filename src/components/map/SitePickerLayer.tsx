@@ -3,6 +3,7 @@ import maplibregl from 'maplibre-gl';
 import { useMap } from './MapContext';
 import { useRadarStore, type NexradSite } from '../../stores/radarStore';
 import { getPublicAssetUrl } from '../../utils/baseUrl';
+import { isMapUsable } from '../../utils/mapSafety';
 
 const SITES_SOURCE_ID = 'nexrad-sites';
 const SITES_LAYER_ID = 'nexrad-sites-layer';
@@ -172,6 +173,7 @@ export function SitePickerLayer() {
 
     // Bind click/hover events once the layer exists
     const bindEvents = () => {
+      if (!isMapUsable(map)) return;
       if (map.getLayer(SITES_LAYER_ID)) {
         map.on('click', SITES_LAYER_ID, onClick);
         map.on('mouseenter', SITES_LAYER_ID, onMouseEnter);
@@ -188,13 +190,15 @@ export function SitePickerLayer() {
 
     return () => {
       cancelled = true;
-      map.off('style.load', onStyleLoad);
-      map.off('sourcedata', bindEvents);
-      if (map.getLayer(SITES_LAYER_ID)) {
-        map.off('click', SITES_LAYER_ID, onClick);
-        map.off('mouseenter', SITES_LAYER_ID, onMouseEnter);
-        map.off('mouseleave', SITES_LAYER_ID, onMouseLeave);
-      }
+      try {
+        map.off('style.load', onStyleLoad);
+        map.off('sourcedata', bindEvents);
+        if (map.getLayer(SITES_LAYER_ID)) {
+          map.off('click', SITES_LAYER_ID, onClick);
+          map.off('mouseenter', SITES_LAYER_ID, onMouseEnter);
+          map.off('mouseleave', SITES_LAYER_ID, onMouseLeave);
+        }
+      } catch { /* map destroyed */ }
       popupRef.current?.remove();
     };
   }, [map]);

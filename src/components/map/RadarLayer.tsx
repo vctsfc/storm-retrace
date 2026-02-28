@@ -7,6 +7,7 @@ import { frameCache, FrameCache } from '../../services/nexrad/frameCache';
 import { getPrefetchManager } from '../../services/nexrad/prefetchManager';
 import { computeRadarBounds } from '../../services/nexrad/renderer';
 import { playChime } from '../../utils/chime';
+import { isMapUsable } from '../../utils/mapSafety';
 import type { RenderedFrame } from '../../services/nexrad/types';
 
 const RADAR_SOURCE_ID = 'radar-image';
@@ -36,7 +37,7 @@ export function RadarLayer() {
    */
   const displayCurrentFrame = useCallback(() => {
     const currentMap = mapRef.current;
-    if (!currentMap) return;
+    if (!isMapUsable(currentMap)) return;
 
     const { currentIndex, frameTimes } = useTimelineStore.getState();
     const radarState = useRadarStore.getState();
@@ -227,9 +228,11 @@ export function RadarLayer() {
       // Apply radar opacity changes
       if (state.radarOpacity !== prevRadarOpacity) {
         prevRadarOpacity = state.radarOpacity;
-        if (map.getLayer(RADAR_LAYER_ID)) {
-          map.setPaintProperty(RADAR_LAYER_ID, 'raster-opacity', state.radarOpacity);
-        }
+        try {
+          if (isMapUsable(map) && map.getLayer(RADAR_LAYER_ID)) {
+            map.setPaintProperty(RADAR_LAYER_ID, 'raster-opacity', state.radarOpacity);
+          }
+        } catch { /* map destroyed */ }
       }
 
       // Auto-prefetch ALL frames when scans are first loaded
@@ -252,8 +255,8 @@ export function RadarLayer() {
       unsubTimeline();
       unsubRadar();
       pm.setOnFrameReady(null as any);
-      map.off('style.load', onStyleLoad);
       cancelAnimationFrame(displayRafRef.current);
+      try { map.off('style.load', onStyleLoad); } catch { /* map destroyed */ }
     };
   }, [map, displayCurrentFrame, onFrameChange, scheduleDisplay]);
 

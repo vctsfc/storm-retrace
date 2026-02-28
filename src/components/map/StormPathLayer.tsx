@@ -14,6 +14,7 @@
 import { useEffect, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
 import { useMap } from './MapContext';
+import { isMapUsable } from '../../utils/mapSafety';
 import { useStormPathStore, type StormWaypoint } from '../../stores/stormPathStore';
 import { useTimelineStore } from '../../stores/timelineStore';
 
@@ -174,6 +175,7 @@ export function StormPathLayer() {
       const { drawingMode, waypoints } = useStormPathStore.getState();
 
       if (!drawLayersAddedRef.current) return;
+      if (!isMapUsable(map)) return;
 
       if (drawingMode) {
         // Show drawing layers with current data
@@ -205,10 +207,12 @@ export function StormPathLayer() {
     };
 
     const removeDrawLayers = () => {
-      if (map.getLayer(DRAW_LINE_LAYER)) map.removeLayer(DRAW_LINE_LAYER);
-      if (map.getSource(DRAW_LINE_SOURCE)) map.removeSource(DRAW_LINE_SOURCE);
-      if (map.getLayer(DRAW_POINTS_LAYER)) map.removeLayer(DRAW_POINTS_LAYER);
-      if (map.getSource(DRAW_POINTS_SOURCE)) map.removeSource(DRAW_POINTS_SOURCE);
+      try {
+        if (map.getLayer(DRAW_LINE_LAYER)) map.removeLayer(DRAW_LINE_LAYER);
+        if (map.getSource(DRAW_LINE_SOURCE)) map.removeSource(DRAW_LINE_SOURCE);
+        if (map.getLayer(DRAW_POINTS_LAYER)) map.removeLayer(DRAW_POINTS_LAYER);
+        if (map.getSource(DRAW_POINTS_SOURCE)) map.removeSource(DRAW_POINTS_SOURCE);
+      } catch { /* map already destroyed */ }
       drawLayersAddedRef.current = false;
     };
 
@@ -242,6 +246,7 @@ export function StormPathLayer() {
     const followStormUpdate = () => {
       const { followStorm, waypoints } = useStormPathStore.getState();
       if (!followStorm || waypoints.length < 2) return;
+      if (!isMapUsable(map)) return;
 
       const { currentIndex, frameTimes, speed } = useTimelineStore.getState();
       const targetMs = frameTimes[currentIndex] ?? 0;
@@ -344,10 +349,12 @@ export function StormPathLayer() {
       unsubStormPath();
       unsubTimeline();
       if (easeRafRef.current !== null) cancelAnimationFrame(easeRafRef.current);
-      map.off('click', onMapClick);
-      map.off('dragstart', onDragStart);
-      map.off('style.load', onStyleLoad);
-      map.getCanvas().style.cursor = '';
+      try {
+        map.off('click', onMapClick);
+        map.off('dragstart', onDragStart);
+        map.off('style.load', onStyleLoad);
+        map.getCanvas().style.cursor = '';
+      } catch { /* map destroyed */ }
       removeDrawLayers();
     };
   }, [map]);

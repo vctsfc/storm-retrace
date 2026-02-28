@@ -3,6 +3,7 @@ import maplibregl from 'maplibre-gl';
 import { useMap } from './MapContext';
 import { useOverlayStore, type LocalStormReport } from '../../stores/overlayStore';
 import { useTimelineStore } from '../../stores/timelineStore';
+import { isMapUsable } from '../../utils/mapSafety';
 
 const LSR_SOURCE_ID = 'lsr-reports';
 const LSR_CIRCLE_LAYER_ID = 'lsr-reports-circles';
@@ -227,6 +228,7 @@ export function LSRLayer() {
 
     const applyOpacity = () => {
       if (!addedRef.current) return;
+      if (!isMapUsable(map)) return;
       const { lsrsOpacity } = useOverlayStore.getState();
       if (map.getLayer(LSR_CIRCLE_LAYER_ID)) {
         map.setPaintProperty(LSR_CIRCLE_LAYER_ID, 'circle-opacity', 0.85 * lsrsOpacity);
@@ -239,6 +241,7 @@ export function LSRLayer() {
 
     const applyVisibilityAndFilter = () => {
       if (!addedRef.current) return;
+      if (!isMapUsable(map)) return;
 
       const { lsrsVisible, lsrsTimeSynced } = useOverlayStore.getState();
       const visibility = lsrsVisible ? 'visible' : 'none';
@@ -314,26 +317,28 @@ export function LSRLayer() {
     };
 
     const unsubOverlay = useOverlayStore.subscribe((state, prevState) => {
-      if (state.lsrs !== prevState.lsrs) {
-        const source = map.getSource(LSR_SOURCE_ID);
-        if (source && 'setData' in source) {
-          (source as any).setData(lsrsToGeoJSON(state.lsrs));
-        } else if (state.lsrs.length > 0) {
-          addLayers();
+      try {
+        if (state.lsrs !== prevState.lsrs) {
+          const source = map.getSource(LSR_SOURCE_ID);
+          if (source && 'setData' in source) {
+            (source as any).setData(lsrsToGeoJSON(state.lsrs));
+          } else if (state.lsrs.length > 0) {
+            addLayers();
+          }
+          applyVisibilityAndFilter();
         }
-        applyVisibilityAndFilter();
-      }
 
-      if (
-        state.lsrsVisible !== prevState.lsrsVisible ||
-        state.lsrsTimeSynced !== prevState.lsrsTimeSynced
-      ) {
-        applyVisibilityAndFilter();
-      }
+        if (
+          state.lsrsVisible !== prevState.lsrsVisible ||
+          state.lsrsTimeSynced !== prevState.lsrsTimeSynced
+        ) {
+          applyVisibilityAndFilter();
+        }
 
-      if (state.lsrsOpacity !== prevState.lsrsOpacity) {
-        applyOpacity();
-      }
+        if (state.lsrsOpacity !== prevState.lsrsOpacity) {
+          applyOpacity();
+        }
+      } catch { /* map destroyed */ }
     });
 
     let prevTimelineIndex = useTimelineStore.getState().currentIndex;
@@ -378,18 +383,20 @@ export function LSRLayer() {
       unsubOverlay();
       unsubTimeline();
       if (filterRafId !== null) cancelAnimationFrame(filterRafId);
-      map.off('style.load', onStyleLoad);
-      map.off('sourcedata', bindEvents);
-      if (map.getLayer(LSR_CIRCLE_LAYER_ID)) {
-        map.off('click', LSR_CIRCLE_LAYER_ID, onFeatureClick);
-        map.off('mouseenter', LSR_CIRCLE_LAYER_ID, onMouseEnter);
-        map.off('mouseleave', LSR_CIRCLE_LAYER_ID, onMouseLeave);
-      }
-      if (map.getLayer(LSR_SYMBOL_LAYER_ID)) {
-        map.off('click', LSR_SYMBOL_LAYER_ID, onFeatureClick);
-        map.off('mouseenter', LSR_SYMBOL_LAYER_ID, onMouseEnter);
-        map.off('mouseleave', LSR_SYMBOL_LAYER_ID, onMouseLeave);
-      }
+      try {
+        map.off('style.load', onStyleLoad);
+        map.off('sourcedata', bindEvents);
+        if (map.getLayer(LSR_CIRCLE_LAYER_ID)) {
+          map.off('click', LSR_CIRCLE_LAYER_ID, onFeatureClick);
+          map.off('mouseenter', LSR_CIRCLE_LAYER_ID, onMouseEnter);
+          map.off('mouseleave', LSR_CIRCLE_LAYER_ID, onMouseLeave);
+        }
+        if (map.getLayer(LSR_SYMBOL_LAYER_ID)) {
+          map.off('click', LSR_SYMBOL_LAYER_ID, onFeatureClick);
+          map.off('mouseenter', LSR_SYMBOL_LAYER_ID, onMouseEnter);
+          map.off('mouseleave', LSR_SYMBOL_LAYER_ID, onMouseLeave);
+        }
+      } catch { /* map destroyed */ }
       popupRef.current?.remove();
     };
   }, [map]);
