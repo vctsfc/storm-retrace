@@ -1,4 +1,5 @@
 import { EventPicker } from '../sidebar/EventPicker';
+import { SegmentEditor } from '../sidebar/SegmentEditor';
 import { ProductSelector } from '../sidebar/ProductSelector';
 import { PaletteSelector } from '../sidebar/PaletteSelector';
 import { ElevationSelector } from '../sidebar/ElevationSelector';
@@ -29,6 +30,7 @@ export function Sidebar() {
       <CollapsibleSection title="Event" storageKey="event">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <EventPicker />
+          <SegmentEditor />
           <GPXImport />
         </div>
       </CollapsibleSection>

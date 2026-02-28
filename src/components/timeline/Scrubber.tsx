@@ -19,6 +19,8 @@ export function Scrubber() {
   const setCurrentIndex = useTimelineStore((s) => s.setCurrentIndex);
   const setPlaying = useTimelineStore((s) => s.setPlaying);
   const prefetchProgress = useRadarStore((s) => s.prefetchProgress);
+  const segments = useRadarStore((s) => s.segments);
+  const scanFiles = useRadarStore((s) => s.scanFiles);
 
   // Hover tooltip state
   const [hoverInfo, setHoverInfo] = useState<{
@@ -80,8 +82,14 @@ export function Scrubber() {
       const ts = frameTimes[index];
       if (!ts) { setHoverInfo(null); return; }
 
-      const tz = useRadarStore.getState().selectedSite?.tz || 'UTC';
-      const time = `${formatLocalTime(ts, tz)} ${getTimezoneAbbr(ts, tz)}`;
+      // In multi-site mode, use the per-frame site's timezone and show site ID
+      const scan = scanFiles[index];
+      const seg = scan?.siteId
+        ? useRadarStore.getState().segments.find((s) => s.site.id === scan.siteId)
+        : null;
+      const tz = seg?.site.tz ?? useRadarStore.getState().selectedSite?.tz ?? 'UTC';
+      const siteLabel = scan?.siteId ? ` (${scan.siteId})` : '';
+      const time = `${formatLocalTime(ts, tz)} ${getTimezoneAbbr(ts, tz)}${siteLabel}`;
 
       setHoverInfo({
         x: e.clientX - rect.left,
@@ -156,6 +164,22 @@ export function Scrubber() {
             style={{ left: `${progress * 100}%` }}
           />
         )}
+
+        {/* Handoff markers for multi-site segments */}
+        {segments.length > 1 &&
+          segments.slice(0, -1).map((seg, i) => {
+            const boundaryIndex = frameTimes.findIndex((t) => t >= seg.endMs);
+            if (boundaryIndex < 0 || totalFrames <= 1) return null;
+            const pos = (boundaryIndex / (totalFrames - 1)) * 100;
+            return (
+              <div
+                key={seg.id}
+                className="handoff-marker"
+                style={{ left: `${pos}%` }}
+                title={`Handoff: ${seg.site.id} → ${segments[i + 1].site.id}`}
+              />
+            );
+          })}
 
         {/* Hover time tooltip */}
         {hoverInfo && (

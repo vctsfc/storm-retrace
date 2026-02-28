@@ -99,6 +99,11 @@ export function RadarLayer() {
 
     if (!selectedSite || scanFiles.length === 0) return;
 
+    // Per-frame site coords (multi-site handoff) with selectedSite as fallback
+    const scanFile = scanFiles[currentIndex];
+    const siteLat = scanFile?.siteLat ?? selectedSite.lat;
+    const siteLon = scanFile?.siteLon ?? selectedSite.lon;
+
     // Resolve active color table for the current product
     const colorTable = getActiveColorTable(radarState, product);
 
@@ -109,8 +114,8 @@ export function RadarLayer() {
       scanFiles,
       product as 'REF' | 'VEL',
       elevationIndex,
-      selectedSite.lat,
-      selectedSite.lon,
+      siteLat,
+      siteLon,
       colorTable,
       paletteVersion,
       radarSmoothing,
@@ -182,7 +187,25 @@ export function RadarLayer() {
 
     const unsubTimeline = useTimelineStore.subscribe((state) => {
       if (state.currentIndex !== prevTimelineIndex) {
+        const prevIndex = prevTimelineIndex;
         prevTimelineIndex = state.currentIndex;
+
+        // Detect multi-site handoff — fly to new site when site changes
+        const scanFiles = useRadarStore.getState().scanFiles;
+        const prevScan = scanFiles[prevIndex];
+        const currScan = scanFiles[state.currentIndex];
+        if (
+          currScan?.siteId && prevScan?.siteId &&
+          currScan.siteId !== prevScan.siteId &&
+          currScan.siteLat != null && currScan.siteLon != null &&
+          isMapUsable(mapRef.current)
+        ) {
+          mapRef.current!.flyTo({
+            center: [currScan.siteLon, currScan.siteLat],
+            duration: 800,
+          });
+        }
+
         // Display is now instant (pre-computed blob URL) — no throttle needed
         onFrameChange();
       }

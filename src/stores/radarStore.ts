@@ -23,6 +23,22 @@ export interface ScanFile {
   sweepIndex?: number;
   /** Total sweeps detected in parent volume (set when SAILS detected) */
   sweepCount?: number;
+  /** NEXRAD site ID that produced this scan (multi-site handoff) */
+  siteId?: string;
+  /** Site latitude in degrees (multi-site handoff) */
+  siteLat?: number;
+  /** Site longitude in degrees (multi-site handoff) */
+  siteLon?: number;
+}
+
+/** Defines a time segment assigned to a specific radar site for multi-site handoff. */
+export interface RadarSegment {
+  id: string;
+  site: NexradSite;
+  /** Segment start time (UTC ms, inclusive) */
+  startMs: number;
+  /** Segment end time (UTC ms, exclusive — next segment starts here) */
+  endMs: number;
 }
 
 export interface RadarState {
@@ -75,6 +91,9 @@ export interface RadarState {
   /** Whether to show the storm attributes overlay */
   showStormAttributes: boolean;
   setShowStormAttributes: (show: boolean) => void;
+  /** Ordered radar segments for multi-site handoff (empty = single-site mode) */
+  segments: RadarSegment[];
+  setSegments: (segments: RadarSegment[]) => void;
   /** Force a full re-render of all cached radar frames (bumps paletteVersion) */
   forceRerender: () => void;
 }
@@ -102,6 +121,8 @@ export const useRadarStore = create<RadarState>()(
       setCurrentFrameStats: (stats) => set({ currentFrameStats: stats }),
       showStormAttributes: true,
       setShowStormAttributes: (show) => set({ showStormAttributes: show }),
+      segments: [],
+      setSegments: (segments) => set({ segments }),
 
       setSelectedSite: (site) => set({ selectedSite: site }),
       setProduct: (product) => set({ product }),
@@ -158,6 +179,34 @@ export const useRadarStore = create<RadarState>()(
     },
   ),
 );
+
+/**
+ * Resolve site info for a given frame index.
+ * Reads per-frame siteId/siteLat/siteLon from the ScanFile (multi-site mode),
+ * falling back to selectedSite (single-site mode).
+ */
+export function getSiteForFrame(
+  index: number,
+  scanFiles: ScanFile[],
+  selectedSite: NexradSite | null,
+): { id: string; lat: number; lon: number; tz: string } | null {
+  const scan = scanFiles[index];
+  if (scan?.siteId && scan.siteLat != null && scan.siteLon != null) {
+    // Multi-site: look up timezone from segments
+    const segments = useRadarStore.getState().segments;
+    const seg = segments.find((s) => s.site.id === scan.siteId);
+    return {
+      id: scan.siteId,
+      lat: scan.siteLat,
+      lon: scan.siteLon,
+      tz: seg?.site.tz ?? selectedSite?.tz ?? 'UTC',
+    };
+  }
+  if (selectedSite) {
+    return { id: selectedSite.id, lat: selectedSite.lat, lon: selectedSite.lon, tz: selectedSite.tz };
+  }
+  return null;
+}
 
 /**
  * Resolve the active color table for a product from the current store state.

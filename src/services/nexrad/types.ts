@@ -6,6 +6,12 @@ export interface ScanFile {
   sweepIndex?: number;
   /** Total sweeps detected in parent volume (set when SAILS detected) */
   sweepCount?: number;
+  /** NEXRAD site ID that produced this scan (multi-site handoff) */
+  siteId?: string;
+  /** Site latitude in degrees (multi-site handoff) */
+  siteLat?: number;
+  /** Site longitude in degrees (multi-site handoff) */
+  siteLon?: number;
 }
 
 export interface FrameStats {

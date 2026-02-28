@@ -143,13 +143,27 @@ export function useTimeSyncedOverlays() {
               useOverlayStore.getState().setLSRsLoading(false);
             });
 
-          // Surface observations — discover stations near radar site, then fetch obs
-          const selectedSite = useRadarStore.getState().selectedSite;
-          const surfaceObsP = selectedSite
-            ? fetchNearbyStations(selectedSite.lat, selectedSite.lon, 230)
-                .then((stations) => {
-                  useOverlayStore.getState().setSurfaceObsStations(stations);
-                  return fetchObservations(stations, startMs, endMs);
+          // Surface observations — discover stations near all radar sites, then fetch obs
+          // In multi-site mode, fetch nearby stations for each segment site (deduplicated)
+          const radarState = useRadarStore.getState();
+          const selectedSite = radarState.selectedSite;
+          const segments = radarState.segments;
+          const sites = segments.length > 0
+            ? segments.map((s) => s.site)
+            : selectedSite ? [selectedSite] : [];
+
+          const surfaceObsP = sites.length > 0
+            ? Promise.all(sites.map((site) => fetchNearbyStations(site.lat, site.lon, 230)))
+                .then((stationArrays) => {
+                  // Deduplicate stations by ID
+                  const seen = new Set<string>();
+                  const allStations = stationArrays.flat().filter((s) => {
+                    if (seen.has(s.id)) return false;
+                    seen.add(s.id);
+                    return true;
+                  });
+                  useOverlayStore.getState().setSurfaceObsStations(allStations);
+                  return fetchObservations(allStations, startMs, endMs);
                 })
                 .then((obs) => {
                   useOverlayStore.getState().setSurfaceObs(obs);

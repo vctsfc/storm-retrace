@@ -1,5 +1,5 @@
 import { useTimelineStore } from '../../stores/timelineStore';
-import { useRadarStore } from '../../stores/radarStore';
+import { useRadarStore, getSiteForFrame } from '../../stores/radarStore';
 import { formatLocalTime, formatLocalDate, getTimezoneAbbr } from '../../utils/time';
 
 /**
@@ -19,6 +19,11 @@ export function FrameInfo() {
   const currentTime = frameTimes[currentIndex] ?? 0;
   const totalFrames = frameTimes.length;
 
+  // Per-frame site info (multi-site handoff) with selectedSite fallback
+  const activeSite = getSiteForFrame(currentIndex, scanFiles, selectedSite);
+  const activeTz = activeSite?.tz ?? 'UTC';
+  const activeSiteId = activeSite?.id ?? selectedSite?.id;
+
   const elevation = availableElevations[elevationIndex];
   const elevationStr = typeof elevation === 'number'
     ? `${elevation.toFixed(1)}°`
@@ -35,13 +40,13 @@ export function FrameInfo() {
       {currentTime > 0 && (
         <>
           <span className="timestamp">
-            {formatLocalTime(currentTime, selectedSite?.tz || 'UTC')}{' '}
-            {getTimezoneAbbr(currentTime, selectedSite?.tz || 'UTC')}
+            {formatLocalTime(currentTime, activeTz)}{' '}
+            {getTimezoneAbbr(currentTime, activeTz)}
           </span>
-          <span>{formatLocalDate(currentTime, selectedSite?.tz || 'UTC')}</span>
+          <span>{formatLocalDate(currentTime, activeTz)}</span>
         </>
       )}
-      {selectedSite && <span>{selectedSite.id}</span>}
+      {activeSiteId && <span>{activeSiteId}</span>}
       <span>{product}</span>
       {elevationStr && <span>{elevationStr}</span>}
       {hasSails && (

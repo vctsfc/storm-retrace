@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { useRadarStore, type NexradSite } from '../../stores/radarStore';
+import { useRadarStore, type NexradSite, type RadarSegment } from '../../stores/radarStore';
 import { useTimelineStore } from '../../stores/timelineStore';
 import { useOverlayStore } from '../../stores/overlayStore';
 import { useStormPathStore } from '../../stores/stormPathStore';
@@ -95,6 +95,84 @@ async function probeSailsSweepCount(
   } catch (err) {
     console.warn('[EventPicker] SAILS probe failed, assuming single sweep:', err);
     return 1;
+  }
+}
+
+/**
+ * Load scan data for multiple radar segments (multi-site handoff).
+ *
+ * For each segment, fetches S3 file list, probes SAILS, expands sweeps,
+ * tags each ScanFile with its site info, then merges all into a single
+ * sorted timeline. Called by SegmentEditor when segments change.
+ */
+export async function loadSegments(segments: RadarSegment[]): Promise<void> {
+  if (segments.length === 0) return;
+
+  const store = useRadarStore.getState();
+  const timeline = useTimelineStore.getState();
+
+  store.setLoading(true);
+  store.setError(null);
+  store.setCurrentFrameStats(null);
+
+  getPrefetchManager().cancelAll();
+  rawScanCache.clear();
+  frameCache.clear();
+
+  try {
+    // Fetch scans for each segment in parallel
+    const segmentScans = await Promise.all(
+      segments.map(async (seg) => {
+        const scans = await listScansForRange(
+          seg.site.id,
+          new Date(seg.startMs),
+          new Date(seg.endMs),
+        );
+        // Tag each scan with its site info
+        return scans.map((scan) => ({
+          ...scan,
+          siteId: seg.site.id,
+          siteLat: seg.site.lat,
+          siteLon: seg.site.lon,
+        }));
+      }),
+    );
+
+    // SAILS probe + expansion per segment (sites may differ in sweep count)
+    const expandedSegments = await Promise.all(
+      segmentScans.map(async (scans, i) => {
+        if (scans.length === 0) return scans;
+        const seg = segments[i];
+        const sweepCount = await probeSailsSweepCount(scans[0], seg.site.lat, seg.site.lon);
+        const expanded = expandScansForSails(scans, sweepCount);
+        // Preserve site tags through expansion
+        return expanded.map((s) => ({
+          ...s,
+          siteId: seg.site.id,
+          siteLat: seg.site.lat,
+          siteLon: seg.site.lon,
+        }));
+      }),
+    );
+
+    const allScans = expandedSegments.flat();
+    allScans.sort((a, b) => a.timestamp - b.timestamp);
+
+    if (allScans.length === 0) {
+      store.setError('No scans found for any segment');
+      store.setScanFiles([]);
+      timeline.setFrameTimes([]);
+    } else {
+      timeline.setFrameTimes(allScans.map((s) => s.timestamp));
+      store.setScanFiles(allScans);
+      store.setSegments(segments);
+      store.setAvailableElevations([]);
+      store.setElevationIndex(0);
+    }
+  } catch (err) {
+    store.setError(err instanceof Error ? err.message : 'Failed to load multi-site scans');
+  } finally {
+    store.setLoading(false);
   }
 }
 
