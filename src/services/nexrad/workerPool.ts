@@ -58,9 +58,13 @@ export class RadarWorkerPool {
         const response = e.data as WorkerResponse;
         const pending = this.callbacks.get(response.id);
 
-        // Mark slot as free
-        slot.busy = false;
-        slot.currentRequestId = null;
+        // Only mark slot as free if this response matches the current request.
+        // After cancelAll(), a stale response may arrive for a request that
+        // was already discarded while the slot was re-assigned to a new task.
+        if (slot.currentRequestId === response.id) {
+          slot.busy = false;
+          slot.currentRequestId = null;
+        }
 
         if (pending) {
           this.callbacks.delete(response.id);

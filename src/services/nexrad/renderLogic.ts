@@ -475,6 +475,7 @@ export function detectSailsElevations(radar: any): SailsDetectionResult {
   try {
     const elevIndices: number[] = radar.listElevations?.() ?? [];
     if (elevIndices.length === 0) {
+      console.warn('[SAILS] listElevations returned empty array');
       return { sweepCount: 1, elevationNumbers: [1], elevationAngle: 0.5 };
     }
 
@@ -506,15 +507,20 @@ export function detectSailsElevations(radar: any): SailsDetectionResult {
 
     const lowestGroup = angleGroups.get(lowestAngle);
     if (!lowestGroup || lowestGroup.length === 0) {
+      console.warn('[SAILS] No valid elevation data found');
       return { sweepCount: 1, elevationNumbers: [1], elevationAngle: 0.5 };
     }
 
     // Sort elevation numbers to maintain VCP order
     lowestGroup.sort((a, b) => a - b);
 
-    if (lowestGroup.length > 1) {
-      console.log(`[SAILS] Detected ${lowestGroup.length} sweeps at ${lowestAngle}° → elevation numbers: [${lowestGroup.join(', ')}]`);
-    }
+    // Always log the detection result for diagnostics
+    const allAngles = Array.from(angleGroups.entries())
+      .sort(([a], [b]) => a - b)
+      .map(([angle, idxs]) => `${angle}°:[${idxs.join(',')}]`)
+      .join(' ');
+    console.log(`[SAILS] Elevation map: ${allAngles}`);
+    console.log(`[SAILS] Lowest angle ${lowestAngle}° has ${lowestGroup.length} sweep(s): [${lowestGroup.join(', ')}]`);
 
     return {
       sweepCount: lowestGroup.length,

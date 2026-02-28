@@ -69,33 +69,79 @@ function expandScansForSails(scans: ScanFile[], sweepCount: number): ScanFile[] 
 }
 
 /**
- * Probe the first scan file for SAILS sweep count.
- * Downloads and parses the file in the worker pool, returns the sweep count.
+ * Probe a single scan file for SAILS sweep count.
+ * Downloads the file, parses it in a worker, and returns { sweepCount, vcp }.
  */
-async function probeSailsSweepCount(
-  firstScan: ScanFile,
+async function probeSingleFile(
+  scan: ScanFile,
   siteLat: number,
   siteLon: number,
-): Promise<number> {
-  try {
-    const buffer = await fetchScan(firstScan.key);
-    // Cache the raw scan so prefetch doesn't re-download it
-    rawScanCache.set(firstScan.key, buffer);
+): Promise<{ sweepCount: number; vcp: number }> {
+  const buffer = await fetchScan(scan.key);
+  // Cache the raw scan so prefetch doesn't re-download it
+  rawScanCache.set(scan.key, buffer);
 
-    const pool = getWorkerPool();
-    const result = await pool.probeSweeps({
-      scanBuffer: buffer.slice(0),
-      scanKey: firstScan.key,
-      elevationNumber: 1, // Elevation 1 = lowest (where SAILS sweeps occur)
-      siteLat,
-      siteLon,
-    });
+  const pool = getWorkerPool();
+  const result = await pool.probeSweeps({
+    scanBuffer: buffer.slice(0),
+    scanKey: scan.key,
+    elevationNumber: 1,
+    siteLat,
+    siteLon,
+  });
 
-    return result.sweepCount ?? 1;
-  } catch (err) {
-    console.warn('[EventPicker] SAILS probe failed, assuming single sweep:', err);
-    return 1;
+  return {
+    sweepCount: result.sweepCount ?? 1,
+    vcp: result.vcp ?? 0,
+  };
+}
+
+/**
+ * Probe scan files for SAILS sweep count. Tries up to 3 files
+ * (first, ~25% through, ~50% through) and takes the maximum sweep count
+ * found. This handles cases where the first file is truncated or from a
+ * VCP transition where SAILS wasn't yet active.
+ */
+async function probeSailsSweepCount(
+  scans: ScanFile[],
+  siteLat: number,
+  siteLon: number,
+): Promise<{ sweepCount: number; vcp: number }> {
+  if (scans.length === 0) return { sweepCount: 1, vcp: 0 };
+
+  // Pick probe indices: first, ~25%, ~50% through the list
+  const probeIndices = [0];
+  if (scans.length > 4) {
+    probeIndices.push(Math.floor(scans.length * 0.25));
   }
+  if (scans.length > 10) {
+    probeIndices.push(Math.floor(scans.length * 0.5));
+  }
+
+  // Cancel any stale worker tasks so probe runs immediately
+  getWorkerPool().cancelAll();
+
+  let bestSweepCount = 1;
+  let detectedVcp = 0;
+
+  for (const idx of probeIndices) {
+    try {
+      const { sweepCount, vcp } = await probeSingleFile(scans[idx], siteLat, siteLon);
+      console.log(`[SAILS] Probe #${idx} (${scans[idx].key}): VCP=${vcp}, sweepCount=${sweepCount}`);
+      if (vcp) detectedVcp = vcp;
+      if (sweepCount > bestSweepCount) {
+        bestSweepCount = sweepCount;
+      }
+      // If we already found SAILS, no need to probe more files
+      if (bestSweepCount > 1) break;
+    } catch (err) {
+      console.warn(`[SAILS] Probe #${idx} failed:`, err);
+      // Continue to next file
+    }
+  }
+
+  console.log(`[SAILS] Final result: VCP=${detectedVcp}, sweepCount=${bestSweepCount}`);
+  return { sweepCount: bestSweepCount, vcp: detectedVcp };
 }
 
 /**
@@ -143,7 +189,7 @@ export async function loadSegments(segments: RadarSegment[]): Promise<void> {
       segmentScans.map(async (scans, i) => {
         if (scans.length === 0) return scans;
         const seg = segments[i];
-        const sweepCount = await probeSailsSweepCount(scans[0], seg.site.lat, seg.site.lon);
+        const { sweepCount } = await probeSailsSweepCount(scans, seg.site.lat, seg.site.lon);
         const expanded = expandScansForSails(scans, sweepCount);
         // Preserve site tags through expansion
         return expanded.map((s) => ({
@@ -340,9 +386,9 @@ export function EventPicker() {
         store.setScanFiles([]);
         timeline.setFrameTimes([]);
       } else {
-        // Probe the first file for SAILS supplemental sweeps
-        const sweepCount = await probeSailsSweepCount(
-          scans[0],
+        // Probe for SAILS supplemental sweeps (tries multiple files)
+        const { sweepCount, vcp: detectedVcp } = await probeSailsSweepCount(
+          scans,
           selectedSite.lat,
           selectedSite.lon,
         );
@@ -351,7 +397,9 @@ export function EventPicker() {
         const finalScans = expandScansForSails(scans, sweepCount);
 
         if (sweepCount > 1) {
-          console.log(`[EventPicker] SAILS detected: ${sweepCount} sweeps/volume → ${finalScans.length} frames (was ${scans.length} volumes)`);
+          console.log(`[EventPicker] SAILS detected: VCP ${detectedVcp}, ${sweepCount} sweeps/volume → ${finalScans.length} frames (was ${scans.length} volumes)`);
+        } else {
+          console.log(`[EventPicker] No SAILS: VCP ${detectedVcp}, ${scans.length} volumes`);
         }
 
         // Set timeline frames BEFORE scan files so RadarLayer's subscription
