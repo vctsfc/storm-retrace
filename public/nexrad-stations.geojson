@@ -1,0 +1,2517 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -98.413333,
+          45.455833
+        ]
+      },
+      "properties": {
+        "id": "KABR",
+        "name": "Aberdeen, SD",
+        "elevation": 422,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -106.82388,
+          35.149722
+        ]
+      },
+      "properties": {
+        "id": "KABX",
+        "name": "Albuquerque, NM",
+        "elevation": 1814,
+        "tz": "America/Denver"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.007361,
+          36.98405
+        ]
+      },
+      "properties": {
+        "id": "KAKQ",
+        "name": "Wakefield, VA",
+        "elevation": 78,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -101.70927,
+          35.233333
+        ]
+      },
+      "properties": {
+        "id": "KAMA",
+        "name": "Amarillo, TX",
+        "elevation": 1129,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.412667,
+          25.611083
+        ]
+      },
+      "properties": {
+        "id": "KAMX",
+        "name": "Miami, FL",
+        "elevation": 34,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.719533,
+          44.90635
+        ]
+      },
+      "properties": {
+        "id": "KAPX",
+        "name": "Gaylord, MI",
+        "elevation": 476,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -91.191111,
+          43.822778
+        ]
+      },
+      "properties": {
+        "id": "KARX",
+        "name": "La Crosse, WI",
+        "elevation": 414,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.49569,
+          48.194611
+        ]
+      },
+      "properties": {
+        "id": "KATX",
+        "name": "Seattle, WA",
+        "elevation": 196,
+        "tz": "America/Los_Angeles"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.63161,
+          39.495639
+        ]
+      },
+      "properties": {
+        "id": "KBBX",
+        "name": "Beale AFB, CA",
+        "elevation": 67,
+        "tz": "America/Los_Angeles"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.984722,
+          42.199694
+        ]
+      },
+      "properties": {
+        "id": "KBGM",
+        "name": "Binghamton, NY",
+        "elevation": 519,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -124.29216,
+          40.498583
+        ]
+      },
+      "properties": {
+        "id": "KBHX",
+        "name": "Eureka, CA",
+        "elevation": 767,
+        "tz": "America/Los_Angeles"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -100.76055,
+          46.770833
+        ]
+      },
+      "properties": {
+        "id": "KBIS",
+        "name": "Bismarck, ND",
+        "elevation": 535,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -108.6068,
+          45.853778
+        ]
+      },
+      "properties": {
+        "id": "KBLX",
+        "name": "Billings, MT",
+        "elevation": 1129,
+        "tz": "America/Denver"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.770167,
+          33.172417
+        ]
+      },
+      "properties": {
+        "id": "KBMX",
+        "name": "Birmingham, AL",
+        "elevation": 231,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -71.136861,
+          41.955778
+        ]
+      },
+      "properties": {
+        "id": "KBOX",
+        "name": "Boston, MA",
+        "elevation": 71,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -97.418967,
+          25.916
+        ]
+      },
+      "properties": {
+        "id": "KBRO",
+        "name": "Brownsville, TX",
+        "elevation": 27,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.736781,
+          42.948789
+        ]
+      },
+      "properties": {
+        "id": "KBUF",
+        "name": "Buffalo, NY",
+        "elevation": 241,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.703167,
+          24.5975
+        ]
+      },
+      "properties": {
+        "id": "KBYX",
+        "name": "Key West, FL",
+        "elevation": 27,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.118278,
+          33.948722
+        ]
+      },
+      "properties": {
+        "id": "KCAE",
+        "name": "Columbia, SC",
+        "elevation": 105,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -67.806431,
+          46.03925
+        ]
+      },
+      "properties": {
+        "id": "KCBW",
+        "name": "Houlton, ME",
+        "elevation": 262,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -116.23603,
+          43.490217
+        ]
+      },
+      "properties": {
+        "id": "KCBX",
+        "name": "Boise, ID",
+        "elevation": 967,
+        "tz": "America/Boise"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.003722,
+          40.923167
+        ]
+      },
+      "properties": {
+        "id": "KCCX",
+        "name": "State College, PA",
+        "elevation": 758,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.859867,
+          41.413217
+        ]
+      },
+      "properties": {
+        "id": "KCLE",
+        "name": "Cleveland, OH",
+        "elevation": 262,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.042194,
+          32.655528
+        ]
+      },
+      "properties": {
+        "id": "KCLX",
+        "name": "Charleston, SC",
+        "elevation": 70,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -97.51125,
+          27.784017
+        ]
+      },
+      "properties": {
+        "id": "KCRP",
+        "name": "Corpus Christi, TX",
+        "elevation": 43,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.166431,
+          44.511
+        ]
+      },
+      "properties": {
+        "id": "KCXX",
+        "name": "Burlington, VT",
+        "elevation": 131,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -104.80603,
+          41.151919
+        ]
+      },
+      "properties": {
+        "id": "KCYS",
+        "name": "Cheyenne, WY",
+        "elevation": 1888,
+        "tz": "America/Denver"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.67783,
+          38.501111
+        ]
+      },
+      "properties": {
+        "id": "KDAX",
+        "name": "Sacramento, CA",
+        "elevation": 44,
+        "tz": "America/Los_Angeles"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -99.968889,
+          37.760833
+        ]
+      },
+      "properties": {
+        "id": "KDDC",
+        "name": "Dodge City, KS",
+        "elevation": 814,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -100.28033,
+          29.273139
+        ]
+      },
+      "properties": {
+        "id": "KDFX",
+        "name": "Laughlin AFB, TX",
+        "elevation": 365,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.984444,
+          32.279944
+        ]
+      },
+      "properties": {
+        "id": "KDGX",
+        "name": "Brandon, MS",
+        "elevation": 186,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.410731,
+          39.947089
+        ]
+      },
+      "properties": {
+        "id": "KDIX",
+        "name": "Philadelphia, PA",
+        "elevation": 70,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -92.209722,
+          46.836944
+        ]
+      },
+      "properties": {
+        "id": "KDLH",
+        "name": "Duluth, MN",
+        "elevation": 470,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -93.722869,
+          41.7312
+        ]
+      },
+      "properties": {
+        "id": "KDMX",
+        "name": "Des Moines, IA",
+        "elevation": 334,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.440117,
+          38.825767
+        ]
+      },
+      "properties": {
+        "id": "KDOX",
+        "name": "Dover AFB, DE",
+        "elevation": 50,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.471667,
+          42.7
+        ]
+      },
+      "properties": {
+        "id": "KDTX",
+        "name": "Detroit, MI",
+        "elevation": 371,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.580833,
+          41.611667
+        ]
+      },
+      "properties": {
+        "id": "KDVN",
+        "name": "Davenport, IA",
+        "elevation": 259,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -99.254333,
+          32.5385
+        ]
+      },
+      "properties": {
+        "id": "KDYX",
+        "name": "Dyess AFB, TX",
+        "elevation": 482,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -94.264472,
+          38.81025
+        ]
+      },
+      "properties": {
+        "id": "KEAX",
+        "name": "Kansas City, MO",
+        "elevation": 333,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -110.63025,
+          31.89365
+        ]
+      },
+      "properties": {
+        "id": "KEMX",
+        "name": "Tucson, AZ",
+        "elevation": 1621,
+        "tz": "America/Phoenix"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.064083,
+          42.586556
+        ]
+      },
+      "properties": {
+        "id": "KENX",
+        "name": "Albany, NY",
+        "elevation": 590,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -85.459389,
+          31.460556
+        ]
+      },
+      "properties": {
+        "id": "KEOX",
+        "name": "Fort Rucker, AL",
+        "elevation": 164,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -106.698,
+          31.873056
+        ]
+      },
+      "properties": {
+        "id": "KEPZ",
+        "name": "El Paso, TX",
+        "elevation": 1286,
+        "tz": "America/Denver"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -114.89165,
+          35.70135
+        ]
+      },
+      "properties": {
+        "id": "KESX",
+        "name": "Las Vegas, NV",
+        "elevation": 1508,
+        "tz": "America/Los_Angeles"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -85.921667,
+          30.565033
+        ]
+      },
+      "properties": {
+        "id": "KEVX",
+        "name": "Eglin AFB, FL",
+        "elevation": 67,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -98.028611,
+          29.704056
+        ]
+      },
+      "properties": {
+        "id": "KEWX",
+        "name": "Austin/San Antonio, TX",
+        "elevation": 234,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -117.56075,
+          35.09785
+        ]
+      },
+      "properties": {
+        "id": "KEYX",
+        "name": "Edwards AFB, CA",
+        "elevation": 876,
+        "tz": "America/Los_Angeles"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.273969,
+          37.0244
+        ]
+      },
+      "properties": {
+        "id": "KFCX",
+        "name": "Roanoke, VA",
+        "elevation": 904,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -98.976667,
+          34.362194
+        ]
+      },
+      "properties": {
+        "id": "KFDR",
+        "name": "Altus AFB, OK",
+        "elevation": 401,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -103.61888,
+          34.634167
+        ]
+      },
+      "properties": {
+        "id": "KFDX",
+        "name": "Cannon AFB, NM",
+        "elevation": 1432,
+        "tz": "America/Denver"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.56595,
+          33.36355
+        ]
+      },
+      "properties": {
+        "id": "KFFC",
+        "name": "Atlanta, GA",
+        "elevation": 296,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -96.729444,
+          43.587778
+        ]
+      },
+      "properties": {
+        "id": "KFSD",
+        "name": "Sioux Falls, SD",
+        "elevation": 456,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -111.19844,
+          34.574333
+        ]
+      },
+      "properties": {
+        "id": "KFSX",
+        "name": "Flagstaff, AZ",
+        "elevation": 2290,
+        "tz": "America/Phoenix"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -104.5458,
+          39.786639
+        ]
+      },
+      "properties": {
+        "id": "KFTG",
+        "name": "Denver, CO",
+        "elevation": 1710,
+        "tz": "America/Denver"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -97.30315,
+          32.573
+        ]
+      },
+      "properties": {
+        "id": "KFWS",
+        "name": "Dallas/Fort Worth, TX",
+        "elevation": 237,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -106.62469,
+          48.206361
+        ]
+      },
+      "properties": {
+        "id": "KGGW",
+        "name": "Glasgow, MT",
+        "elevation": 727,
+        "tz": "America/Denver"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -108.21376,
+          39.062169
+        ]
+      },
+      "properties": {
+        "id": "KGJX",
+        "name": "Grand Junction, CO",
+        "elevation": 3079,
+        "tz": "America/Denver"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -101.70027,
+          39.366944
+        ]
+      },
+      "properties": {
+        "id": "KGLD",
+        "name": "Goodland, KS",
+        "elevation": 1133,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -88.111111,
+          44.498633
+        ]
+      },
+      "properties": {
+        "id": "KGRB",
+        "name": "Green Bay, WI",
+        "elevation": 251,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -97.382944,
+          30.721833
+        ]
+      },
+      "properties": {
+        "id": "KGRK",
+        "name": "Fort Hood, TX",
+        "elevation": 184,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -85.544889,
+          42.893889
+        ]
+      },
+      "properties": {
+        "id": "KGRR",
+        "name": "Grand Rapids, MI",
+        "elevation": 267,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.219833,
+          34.883306
+        ]
+      },
+      "properties": {
+        "id": "KGSP",
+        "name": "Greer, SC",
+        "elevation": 326,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -88.329194,
+          33.896917
+        ]
+      },
+      "properties": {
+        "id": "KGWX",
+        "name": "Columbus AFB, MS",
+        "elevation": 180,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -70.256361,
+          43.891306
+        ]
+      },
+      "properties": {
+        "id": "KGYX",
+        "name": "Portland, ME",
+        "elevation": 144,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.4074,
+          30.5193
+        ]
+      },
+      "properties": {
+        "id": "KHDC",
+        "name": "Hammond, LA",
+        "elevation": 13,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -106.12003,
+          33.077
+        ]
+      },
+      "properties": {
+        "id": "KHDX",
+        "name": "Holloman AFB, NM",
+        "elevation": 1301,
+        "tz": "America/Denver"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -95.078733,
+          29.4719
+        ]
+      },
+      "properties": {
+        "id": "KHGX",
+        "name": "Houston, TX",
+        "elevation": 35,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.63213,
+          36.314181
+        ]
+      },
+      "properties": {
+        "id": "KHNX",
+        "name": "Hanford, CA",
+        "elevation": 104,
+        "tz": "America/Los_Angeles"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.285583,
+          36.736972
+        ]
+      },
+      "properties": {
+        "id": "KHPX",
+        "name": "Fort Campbell, KY",
+        "elevation": 187,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.083611,
+          34.930556
+        ]
+      },
+      "properties": {
+        "id": "KHTX",
+        "name": "Huntsville, AL",
+        "elevation": 567,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -97.443056,
+          37.654444
+        ]
+      },
+      "properties": {
+        "id": "KICT",
+        "name": "Wichita, KS",
+        "elevation": 427,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -112.86218,
+          37.59105
+        ]
+      },
+      "properties": {
+        "id": "KICX",
+        "name": "Cedar City, UT",
+        "elevation": 3279,
+        "tz": "America/Denver"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.82145,
+          39.420483
+        ]
+      },
+      "properties": {
+        "id": "KILN",
+        "name": "Cincinnati, OH",
+        "elevation": 357,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.336792,
+          40.1505
+        ]
+      },
+      "properties": {
+        "id": "KILX",
+        "name": "Lincoln, IL",
+        "elevation": 223,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.280278,
+          39.7075
+        ]
+      },
+      "properties": {
+        "id": "KIND",
+        "name": "Indianapolis, IN",
+        "elevation": 270,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -95.564161,
+          36.175131
+        ]
+      },
+      "properties": {
+        "id": "KINX",
+        "name": "Tulsa, OK",
+        "elevation": 228,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -111.66991,
+          33.289233
+        ]
+      },
+      "properties": {
+        "id": "KIWA",
+        "name": "Phoenix, AZ",
+        "elevation": 435,
+        "tz": "America/Phoenix"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -85.7,
+          41.358611
+        ]
+      },
+      "properties": {
+        "id": "KIWX",
+        "name": "Fort Wayne, IN",
+        "elevation": 322,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.7019,
+          30.484633
+        ]
+      },
+      "properties": {
+        "id": "KJAX",
+        "name": "Jacksonville, FL",
+        "elevation": 49,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.350833,
+          32.675683
+        ]
+      },
+      "properties": {
+        "id": "KJGX",
+        "name": "Robins AFB, GA",
+        "elevation": 188,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.313056,
+          37.590833
+        ]
+      },
+      "properties": {
+        "id": "KJKL",
+        "name": "Jackson, KY",
+        "elevation": 445,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -101.81416,
+          33.654139
+        ]
+      },
+      "properties": {
+        "id": "KLBB",
+        "name": "Lubbock, TX",
+        "elevation": 1030,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -93.215889,
+          30.125306
+        ]
+      },
+      "properties": {
+        "id": "KLCH",
+        "name": "Lake Charles, LA",
+        "elevation": 42,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -124.10666,
+          47.116944
+        ]
+      },
+      "properties": {
+        "id": "KLGX",
+        "name": "Langley Hill, WA",
+        "elevation": 112,
+        "tz": "America/Los_Angeles"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.825417,
+          30.336667
+        ]
+      },
+      "properties": {
+        "id": "KLIX",
+        "name": "New Orleans, LA",
+        "elevation": 55,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -100.57622,
+          41.957944
+        ]
+      },
+      "properties": {
+        "id": "KLNX",
+        "name": "North Platte, NE",
+        "elevation": 949,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -88.084444,
+          41.604444
+        ]
+      },
+      "properties": {
+        "id": "KLOT",
+        "name": "Chicago, IL",
+        "elevation": 232,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -116.8027,
+          40.73955
+        ]
+      },
+      "properties": {
+        "id": "KLRX",
+        "name": "Elko, NV",
+        "elevation": 2102,
+        "tz": "America/Los_Angeles"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.682778,
+          38.698611
+        ]
+      },
+      "properties": {
+        "id": "KLSX",
+        "name": "St. Louis, MO",
+        "elevation": 220,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.429108,
+          33.98915
+        ]
+      },
+      "properties": {
+        "id": "KLTX",
+        "name": "Wilmington, NC",
+        "elevation": 44,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -85.943889,
+          37.975278
+        ]
+      },
+      "properties": {
+        "id": "KLVX",
+        "name": "Louisville, KY",
+        "elevation": 254,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.4875,
+          38.976111
+        ]
+      },
+      "properties": {
+        "id": "KLWX",
+        "name": "Sterling, VA",
+        "elevation": 123,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -92.262194,
+          34.8365
+        ]
+      },
+      "properties": {
+        "id": "KLZK",
+        "name": "Little Rock, AR",
+        "elevation": 198,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -102.18925,
+          31.943461
+        ]
+      },
+      "properties": {
+        "id": "KMAF",
+        "name": "Midland/Odessa, TX",
+        "elevation": 903,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.71736,
+          42.081169
+        ]
+      },
+      "properties": {
+        "id": "KMAX",
+        "name": "Medford, OR",
+        "elevation": 2305,
+        "tz": "America/Los_Angeles"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -100.86444,
+          48.393056
+        ]
+      },
+      "properties": {
+        "id": "KMBX",
+        "name": "Minot AFB, ND",
+        "elevation": 485,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.876189,
+          34.775908
+        ]
+      },
+      "properties": {
+        "id": "KMHX",
+        "name": "Morehead City, NC",
+        "elevation": 44,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -88.550667,
+          42.9679
+        ]
+      },
+      "properties": {
+        "id": "KMKX",
+        "name": "Milwaukee, WI",
+        "elevation": 312,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.654083,
+          28.113194
+        ]
+      },
+      "properties": {
+        "id": "KMLB",
+        "name": "Melbourne, FL",
+        "elevation": 45,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -88.24,
+          30.679444
+        ]
+      },
+      "properties": {
+        "id": "KMOB",
+        "name": "Mobile, AL",
+        "elevation": 88,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -93.565528,
+          44.848889
+        ]
+      },
+      "properties": {
+        "id": "KMPX",
+        "name": "Minneapolis, MN",
+        "elevation": 336,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.548333,
+          46.531111
+        ]
+      },
+      "properties": {
+        "id": "KMQT",
+        "name": "Marquette, MI",
+        "elevation": 465,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.401944,
+          36.168611
+        ]
+      },
+      "properties": {
+        "id": "KMRX",
+        "name": "Knoxville, TN",
+        "elevation": 437,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -113.98622,
+          47.041
+        ]
+      },
+      "properties": {
+        "id": "KMSX",
+        "name": "Missoula, MT",
+        "elevation": 2432,
+        "tz": "America/Denver"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -112.44777,
+          41.262778
+        ]
+      },
+      "properties": {
+        "id": "KMTX",
+        "name": "Salt Lake City, UT",
+        "elevation": 2010,
+        "tz": "America/Denver"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.89844,
+          37.155222
+        ]
+      },
+      "properties": {
+        "id": "KMUX",
+        "name": "San Francisco, CA",
+        "elevation": 1082,
+        "tz": "America/Los_Angeles"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -97.325556,
+          47.527778
+        ]
+      },
+      "properties": {
+        "id": "KMVX",
+        "name": "Grand Forks, ND",
+        "elevation": 330,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -85.78975,
+          32.53665
+        ]
+      },
+      "properties": {
+        "id": "KMXX",
+        "name": "Maxwell AFB, AL",
+        "elevation": 171,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -117.0418,
+          32.919017
+        ]
+      },
+      "properties": {
+        "id": "KNKX",
+        "name": "San Diego, CA",
+        "elevation": 321,
+        "tz": "America/Los_Angeles"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.873333,
+          35.344722
+        ]
+      },
+      "properties": {
+        "id": "KNQA",
+        "name": "Memphis, TN",
+        "elevation": 133,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -96.366819,
+          41.320369
+        ]
+      },
+      "properties": {
+        "id": "KOAX",
+        "name": "Omaha, NE",
+        "elevation": 385,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.5625,
+          36.247222
+        ]
+      },
+      "properties": {
+        "id": "KOHX",
+        "name": "Nashville, TN",
+        "elevation": 206,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -72.863917,
+          40.865528
+        ]
+      },
+      "properties": {
+        "id": "KOKX",
+        "name": "Brookhaven, NY",
+        "elevation": 61,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -117.62677,
+          47.680417
+        ]
+      },
+      "properties": {
+        "id": "KOTX",
+        "name": "Spokane, WA",
+        "elevation": 746,
+        "tz": "America/Los_Angeles"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -88.771944,
+          37.068333
+        ]
+      },
+      "properties": {
+        "id": "KPAH",
+        "name": "Paducah, KY",
+        "elevation": 154,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.217967,
+          40.531717
+        ]
+      },
+      "properties": {
+        "id": "KPBZ",
+        "name": "Pittsburgh, PA",
+        "elevation": 386,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -118.85293,
+          45.69065
+        ]
+      },
+      "properties": {
+        "id": "KPDT",
+        "name": "Pendleton, OR",
+        "elevation": 482,
+        "tz": "America/Los_Angeles"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -92.976111,
+          31.155278
+        ]
+      },
+      "properties": {
+        "id": "KPOE",
+        "name": "Fort Polk, LA",
+        "elevation": 144,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -104.18135,
+          38.45955
+        ]
+      },
+      "properties": {
+        "id": "KPUX",
+        "name": "Pueblo, CO",
+        "elevation": 1635,
+        "tz": "America/Denver"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.48975,
+          35.665519
+        ]
+      },
+      "properties": {
+        "id": "KRAX",
+        "name": "Raleigh, NC",
+        "elevation": 141,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.46202,
+          39.754056
+        ]
+      },
+      "properties": {
+        "id": "KRGX",
+        "name": "Reno, NV",
+        "elevation": 2559,
+        "tz": "America/Los_Angeles"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -108.4773,
+          43.066089
+        ]
+      },
+      "properties": {
+        "id": "KRIW",
+        "name": "Riverton, WY",
+        "elevation": 1717,
+        "tz": "America/Denver"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.722778,
+          38.311111
+        ]
+      },
+      "properties": {
+        "id": "KRLX",
+        "name": "Charleston, WV",
+        "elevation": 370,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.965,
+          45.715039
+        ]
+      },
+      "properties": {
+        "id": "KRTX",
+        "name": "Portland, OR",
+        "elevation": 527,
+        "tz": "America/Los_Angeles"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -112.68613,
+          43.1056
+        ]
+      },
+      "properties": {
+        "id": "KSFX",
+        "name": "Pocatello, ID",
+        "elevation": 1383,
+        "tz": "America/Boise"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -93.400419,
+          37.235239
+        ]
+      },
+      "properties": {
+        "id": "KSGF",
+        "name": "Springfield, MO",
+        "elevation": 419,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -93.84125,
+          32.450833
+        ]
+      },
+      "properties": {
+        "id": "KSHV",
+        "name": "Shreveport, LA",
+        "elevation": 118,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -100.4925,
+          31.371278
+        ]
+      },
+      "properties": {
+        "id": "KSJT",
+        "name": "San Angelo, TX",
+        "elevation": 611,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -117.636,
+          33.817733
+        ]
+      },
+      "properties": {
+        "id": "KSOX",
+        "name": "Santa Ana Mts, CA",
+        "elevation": 947,
+        "tz": "America/Los_Angeles"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -94.361889,
+          35.290417
+        ]
+      },
+      "properties": {
+        "id": "KSRX",
+        "name": "Fort Smith, AR",
+        "elevation": 225,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.401778,
+          27.7055
+        ]
+      },
+      "properties": {
+        "id": "KTBW",
+        "name": "Tampa Bay, FL",
+        "elevation": 37,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -111.38533,
+          47.459583
+        ]
+      },
+      "properties": {
+        "id": "KTFX",
+        "name": "Great Falls, MT",
+        "elevation": 1160,
+        "tz": "America/Denver"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.328944,
+          30.397583
+        ]
+      },
+      "properties": {
+        "id": "KTLH",
+        "name": "Tallahassee, FL",
+        "elevation": 54,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -97.277761,
+          35.333361
+        ]
+      },
+      "properties": {
+        "id": "KTLX",
+        "name": "Oklahoma City, OK",
+        "elevation": 390,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -96.23255,
+          38.99695
+        ]
+      },
+      "properties": {
+        "id": "KTWX",
+        "name": "Topeka, KS",
+        "elevation": 431,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.679861,
+          43.755694
+        ]
+      },
+      "properties": {
+        "id": "KTYX",
+        "name": "Fort Drum, NY",
+        "elevation": 597,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -102.83,
+          44.124722
+        ]
+      },
+      "properties": {
+        "id": "KUDX",
+        "name": "Rapid City, SD",
+        "elevation": 974,
+        "tz": "America/Denver"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -98.441944,
+          40.320833
+        ]
+      },
+      "properties": {
+        "id": "KUEX",
+        "name": "Hastings, NE",
+        "elevation": 627,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.001806,
+          30.890278
+        ]
+      },
+      "properties": {
+        "id": "KVAX",
+        "name": "Moody AFB, GA",
+        "elevation": 101,
+        "tz": "America/New_York"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.39791,
+          34.83855
+        ]
+      },
+      "properties": {
+        "id": "KVBX",
+        "name": "Vandenberg AFB, CA",
+        "elevation": 413,
+        "tz": "America/Los_Angeles"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -98.127717,
+          36.740617
+        ]
+      },
+      "properties": {
+        "id": "KVNX",
+        "name": "Vance AFB, OK",
+        "elevation": 383,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.17875,
+          34.412017
+        ]
+      },
+      "properties": {
+        "id": "KVTX",
+        "name": "Los Angeles, CA",
+        "elevation": 856,
+        "tz": "America/Los_Angeles"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.724528,
+          38.26025
+        ]
+      },
+      "properties": {
+        "id": "KVWX",
+        "name": "Evansville, IN",
+        "elevation": 191,
+        "tz": "America/Chicago"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -114.65671,
+          32.495281
+        ]
+      },
+      "properties": {
+        "id": "KYUX",
+        "name": "Yuma, AZ",
+        "elevation": 73,
+        "tz": "America/Phoenix"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -161.87638,
+          60.791944
+        ]
+      },
+      "properties": {
+        "id": "PABC",
+        "name": "Bethel, AK",
+        "elevation": 59,
+        "tz": "America/Anchorage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -135.52916,
+          56.852778
+        ]
+      },
+      "properties": {
+        "id": "PACG",
+        "name": "Sitka, AK",
+        "elevation": 83,
+        "tz": "America/Anchorage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -165.295,
+          64.511389
+        ]
+      },
+      "properties": {
+        "id": "PAEC",
+        "name": "Nome, AK",
+        "elevation": 27,
+        "tz": "America/Anchorage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -151.35146,
+          60.725914
+        ]
+      },
+      "properties": {
+        "id": "PAHG",
+        "name": "Anchorage, AK",
+        "elevation": 109,
+        "tz": "America/Anchorage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -146.30344,
+          59.460767
+        ]
+      },
+      "properties": {
+        "id": "PAIH",
+        "name": "Middleton Island, AK",
+        "elevation": 40,
+        "tz": "America/Anchorage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -156.62944,
+          58.679444
+        ]
+      },
+      "properties": {
+        "id": "PAKC",
+        "name": "King Salmon, AK",
+        "elevation": 44,
+        "tz": "America/Anchorage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -147.50143,
+          65.035114
+        ]
+      },
+      "properties": {
+        "id": "PAPD",
+        "name": "Fairbanks, AK",
+        "elevation": 825,
+        "tz": "America/Anchorage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -159.5525,
+          21.893889
+        ]
+      },
+      "properties": {
+        "id": "PHKI",
+        "name": "South Kauai, HI",
+        "elevation": 104,
+        "tz": "Pacific/Honolulu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -155.77777,
+          20.125278
+        ]
+      },
+      "properties": {
+        "id": "PHKM",
+        "name": "Kohala, HI",
+        "elevation": 1209,
+        "tz": "Pacific/Honolulu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -157.18027,
+          21.132778
+        ]
+      },
+      "properties": {
+        "id": "PHMO",
+        "name": "Molokai, HI",
+        "elevation": 440,
+        "tz": "Pacific/Honolulu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -155.56888,
+          19.095
+        ]
+      },
+      "properties": {
+        "id": "PHWA",
+        "name": "South Shore, HI",
+        "elevation": 445,
+        "tz": "Pacific/Honolulu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -66.078167,
+          18.115667
+        ]
+      },
+      "properties": {
+        "id": "TJUA",
+        "name": "San Juan, PR",
+        "elevation": 902,
+        "tz": "America/Puerto_Rico"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          144.811111,
+          13.455833
+        ]
+      },
+      "properties": {
+        "id": "PGUA",
+        "name": "Andersen AFB, GU",
+        "elevation": 118,
+        "tz": "Pacific/Guam"
+      }
+    }
+  ]
+}

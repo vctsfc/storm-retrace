@@ -1,0 +1,184 @@
+import { useEffect, useRef } from 'react';
+import { useTimelineStore } from '../stores/timelineStore';
+import { useOverlayStore } from '../stores/overlayStore';
+import { useRadarStore } from '../stores/radarStore';
+import { fetchWarnings } from '../services/overlays/warningsService';
+import { fetchWatches } from '../services/overlays/watchesService';
+import { fetchMCDs } from '../services/overlays/mcdService';
+import { fetchOutlook } from '../services/overlays/outlooksService';
+import { fetchLSRs } from '../services/overlays/lsrService';
+import { fetchNearbyStations, fetchObservations } from '../services/overlays/asosService';
+
+/**
+ * Format a UTC millisecond timestamp as YYYY-MM-DD for the outlook API.
+ */
+function formatUTCDate(ms: number): string {
+  const d = new Date(ms);
+  const y = d.getUTCFullYear();
+  const mo = String(d.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(d.getUTCDate()).padStart(2, '0');
+  return `${y}-${mo}-${day}`;
+}
+
+/**
+ * Hook that watches for new event loads (frameTimes populated) and
+ * triggers overlay data fetches for all overlay types concurrently.
+ * Activated once in AppShell.
+ *
+ * Detects event changes by tracking the first+last frame timestamps,
+ * not just the frame count. This ensures overlays are re-fetched when
+ * switching between events (e.g. KTLX 2013 -> KLNX 2025) even if
+ * frameTimes never goes through an empty state.
+ */
+export function useTimeSyncedOverlays() {
+  const prevStartRef = useRef<number | null>(null);
+  const prevEndRef = useRef<number | null>(null);
+  const fetchingRef = useRef(false);
+
+  useEffect(() => {
+    const unsub = useTimelineStore.subscribe((state) => {
+      const { frameTimes } = state;
+      const frameCount = frameTimes.length;
+
+      if (frameCount > 0) {
+        const startMs = frameTimes[0];
+        const endMs = frameTimes[frameCount - 1];
+
+        // Trigger fetch when event time range changes (new event loaded)
+        if (startMs !== prevStartRef.current || endMs !== prevEndRef.current) {
+          prevStartRef.current = startMs;
+          prevEndRef.current = endMs;
+
+          // Guard against duplicate concurrent fetches
+          if (fetchingRef.current) return;
+          fetchingRef.current = true;
+
+          const overlay = useOverlayStore.getState();
+          overlay.clearAllOverlays();
+
+          // Set all loading flags
+          overlay.setWarningsLoading(true);
+          overlay.setWatchesLoading(true);
+          overlay.setMCDsLoading(true);
+          overlay.setOutlooksLoading(true);
+          overlay.setLSRsLoading(true);
+          overlay.setSurfaceObsLoading(true);
+
+          // Compute outlook date from event midpoint
+          const midpointMs = startMs + (endMs - startMs) / 2;
+          const outlookDate = formatUTCDate(midpointMs);
+
+          // Fire all fetches concurrently — each handles its own success/error
+          const warningsP = fetchWarnings(startMs, endMs)
+            .then((w) => {
+              useOverlayStore.getState().setWarnings(w);
+              console.log(`[Overlays] ${w.length} warnings`);
+            })
+            .catch((e) => {
+              useOverlayStore.getState().setWarningsError(
+                e instanceof Error ? e.message : 'Failed to fetch warnings',
+              );
+            })
+            .finally(() => {
+              useOverlayStore.getState().setWarningsLoading(false);
+            });
+
+          const watchesP = fetchWatches(startMs, endMs)
+            .then((w) => {
+              useOverlayStore.getState().setWatches(w);
+              console.log(`[Overlays] ${w.length} watches`);
+            })
+            .catch((e) => {
+              useOverlayStore.getState().setWatchesError(
+                e instanceof Error ? e.message : 'Failed to fetch watches',
+              );
+            })
+            .finally(() => {
+              useOverlayStore.getState().setWatchesLoading(false);
+            });
+
+          const mcdsP = fetchMCDs(startMs, endMs)
+            .then((m) => {
+              useOverlayStore.getState().setMCDs(m);
+              console.log(`[Overlays] ${m.length} MCDs`);
+            })
+            .catch((e) => {
+              useOverlayStore.getState().setMCDsError(
+                e instanceof Error ? e.message : 'Failed to fetch MCDs',
+              );
+            })
+            .finally(() => {
+              useOverlayStore.getState().setMCDsLoading(false);
+            });
+
+          const outlooksP = fetchOutlook(outlookDate)
+            .then((o) => {
+              useOverlayStore.getState().setOutlooks(o);
+              console.log(`[Overlays] ${o.length} outlook areas`);
+            })
+            .catch((e) => {
+              useOverlayStore.getState().setOutlooksError(
+                e instanceof Error ? e.message : 'Failed to fetch outlooks',
+              );
+            })
+            .finally(() => {
+              useOverlayStore.getState().setOutlooksLoading(false);
+            });
+
+          const lsrsP = fetchLSRs(startMs, endMs)
+            .then((l) => {
+              useOverlayStore.getState().setLSRs(l);
+              console.log(`[Overlays] ${l.length} LSRs`);
+            })
+            .catch((e) => {
+              useOverlayStore.getState().setLSRsError(
+                e instanceof Error ? e.message : 'Failed to fetch LSRs',
+              );
+            })
+            .finally(() => {
+              useOverlayStore.getState().setLSRsLoading(false);
+            });
+
+          // Surface observations — discover stations near radar site, then fetch obs
+          const selectedSite = useRadarStore.getState().selectedSite;
+          const surfaceObsP = selectedSite
+            ? fetchNearbyStations(selectedSite.lat, selectedSite.lon, 230)
+                .then((stations) => {
+                  useOverlayStore.getState().setSurfaceObsStations(stations);
+                  return fetchObservations(stations, startMs, endMs);
+                })
+                .then((obs) => {
+                  useOverlayStore.getState().setSurfaceObs(obs);
+                  console.log(`[Overlays] ${obs.length} surface observations`);
+                })
+                .catch((e) => {
+                  useOverlayStore.getState().setSurfaceObsError(
+                    e instanceof Error ? e.message : 'Failed to fetch surface obs',
+                  );
+                })
+                .finally(() => {
+                  useOverlayStore.getState().setSurfaceObsLoading(false);
+                })
+            : Promise.resolve().then(() => {
+                useOverlayStore.getState().setSurfaceObsLoading(false);
+              });
+
+          Promise.all([warningsP, watchesP, mcdsP, outlooksP, lsrsP, surfaceObsP]).finally(
+            () => {
+              fetchingRef.current = false;
+            },
+          );
+        }
+      } else {
+        // Clear when frames go back to 0 (event unloaded)
+        if (prevStartRef.current !== null) {
+          prevStartRef.current = null;
+          prevEndRef.current = null;
+          useOverlayStore.getState().clearAllOverlays();
+        }
+      }
+    });
+
+    return unsub;
+  }, []);
+}

@@ -1,0 +1,42 @@
+{
+  "name": "storm-replay",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Archived NEXRAD weather radar replay tool for storm chasers",
+  "author": "Christopher Manzeck",
+  "type": "module",
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "electron:dev": "tsc -p electron/tsconfig.json && cp electron/preload.cjs dist-electron/ && concurrently -n vite,electron \"vite\" \"wait-on tcp:5173 && cross-env NODE_ENV=development VITE_DEV_SERVER_URL=http://localhost:5173 electron .\"",
+    "electron:build": "tsc -p electron/tsconfig.json && cp electron/preload.cjs dist-electron/",
+    "electron:preview": "vite build && tsc -p electron/tsconfig.json && cp electron/preload.cjs dist-electron/ && electron .",
+    "dist:dir": "vite build && tsc -p electron/tsconfig.json && cp electron/preload.cjs dist-electron/ && electron-builder --dir",
+    "dist:dmg": "vite build && tsc -p electron/tsconfig.json && cp electron/preload.cjs dist-electron/ && electron-builder"
+  },
+  "dependencies": {
+    "buffer": "^6.0.3",
+    "gifenc": "^1.0.3",
+    "maplibre-gl": "^5.1.0",
+    "mp4-muxer": "^5.2.2",
+    "nexrad-level-2-data": "^2.4.0",
+    "pako": "^2.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zustand": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "concurrently": "^9.1.0",
+    "cross-env": "^7.0.3",
+    "electron": "^34.0.0",
+    "electron-builder": "^25.1.0",
+    "typescript": "~5.7.0",
+    "vite": "^6.1.0",
+    "wait-on": "^8.0.0"
+  }
+}

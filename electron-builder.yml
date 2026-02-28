@@ -1,0 +1,28 @@
+appId: com.stormreplay.app
+productName: StormReplay
+
+directories:
+  buildResources: build
+  output: release
+
+files:
+  - dist/**/*
+  - dist-electron/**/*
+
+mac:
+  category: public.app-category.weather
+  target:
+    - target: dmg
+      arch:
+        - universal
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+
+dmg:
+  contents:
+    - x: 130
+      y: 220
+    - x: 410
+      y: 220
+      type: link
+      path: /Applications
