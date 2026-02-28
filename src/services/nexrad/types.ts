@@ -8,6 +8,16 @@ export interface ScanFile {
   sweepCount?: number;
 }
 
+export interface FrameStats {
+  vcp: number;
+  elevationAngle: number;
+  maxRef: number | null;
+  gatesAbove50: number;
+  gatesAbove60: number;
+  maxInboundVel: number | null;
+  maxOutboundVel: number | null;
+}
+
 export interface RenderedFrame {
   /** Pre-computed blob URL for instant MapLibre display (no toBlob at render time) */
   blobUrl: string;
@@ -17,4 +27,5 @@ export interface RenderedFrame {
   siteLat: number;
   siteLon: number;
   rangeKm: number;
+  stats?: FrameStats;
 }

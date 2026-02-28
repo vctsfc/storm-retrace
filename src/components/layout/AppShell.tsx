@@ -16,6 +16,9 @@ import { StormPathLayer } from '../map/StormPathLayer';
 import { SitePickerLayer } from '../map/SitePickerLayer';
 import { MoreLabelsLayer } from '../map/MoreLabelsLayer';
 import { RadarLegend } from '../map/RadarLegend';
+import { StormAttributesOverlay } from '../map/StormAttributesOverlay';
+import { DistanceBearingLayer } from '../map/DistanceBearingLayer';
+import { DistanceBearingOverlay } from '../map/DistanceBearingOverlay';
 import { TitleBar } from './TitleBar';
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts';
 import { useRadarPlayback } from '../../hooks/useRadarPlayback';
@@ -68,7 +71,10 @@ export function AppShell() {
             <StormPathLayer />
             <SitePickerLayer />
             <MoreLabelsLayer />
+            <DistanceBearingLayer />
             <RadarLegend />
+            <StormAttributesOverlay />
+            <DistanceBearingOverlay />
             {loading && (
               <div className="map-loading-overlay">
                 <div className="spinner" />

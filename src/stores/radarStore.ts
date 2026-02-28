@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { BUILTIN_PALETTES, type ColorStop } from '../services/nexrad/colorTables';
 import type { SmoothingMode } from '../services/nexrad/renderLogic';
+import type { FrameStats } from '../services/nexrad/types';
 
 export type RadarProduct = 'REF' | 'VEL' | 'ZDR' | 'CC' | 'KDP';
 
@@ -68,6 +69,9 @@ export interface RadarState {
   setPrefetchProgress: (progress: { completed: number; total: number } | null) => void;
   setPalette: (product: string, name: string) => void;
   addCustomPalette: (product: string, name: string, stops: ColorStop[]) => void;
+  /** Current frame statistics for the storm attributes overlay */
+  currentFrameStats: FrameStats | null;
+  setCurrentFrameStats: (stats: FrameStats | null) => void;
   /** Force a full re-render of all cached radar frames (bumps paletteVersion) */
   forceRerender: () => void;
 }
@@ -90,6 +94,9 @@ export const useRadarStore = create<RadarState>()(
       paletteName: { REF: 'NWS Default', VEL: 'NWS Default' },
       customPalettes: {},
       paletteVersion: 0,
+
+      currentFrameStats: null,
+      setCurrentFrameStats: (stats) => set({ currentFrameStats: stats }),
 
       setSelectedSite: (site) => set({ selectedSite: site }),
       setProduct: (product) => set({ product }),

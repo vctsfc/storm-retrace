@@ -799,6 +799,55 @@ export function renderFromParsed(
 }
 
 /**
+ * Compute summary statistics from moment data for the storm attributes overlay.
+ */
+export function computeFrameStats(
+  radar: any,
+  vcp: number,
+  elevationAngle: number,
+): { vcp: number; elevationAngle: number; maxRef: number | null; gatesAbove50: number; gatesAbove60: number; maxInboundVel: number | null; maxOutboundVel: number | null } {
+  let maxRef: number | null = null;
+  let gatesAbove50 = 0;
+  let gatesAbove60 = 0;
+  let maxInboundVel: number | null = null;
+  let maxOutboundVel: number | null = null;
+
+  try {
+    const refData = radar.getHighresReflectivity?.();
+    if (Array.isArray(refData)) {
+      for (const radial of refData) {
+        if (!radial?.moment_data) continue;
+        for (const val of radial.moment_data) {
+          if (val === null || val === undefined) continue;
+          if (maxRef === null || val > maxRef) maxRef = val;
+          if (val >= 50) gatesAbove50++;
+          if (val >= 60) gatesAbove60++;
+        }
+      }
+    }
+  } catch { /* ignore */ }
+
+  try {
+    const velData = radar.getHighresVelocity?.();
+    if (Array.isArray(velData)) {
+      for (const radial of velData) {
+        if (!radial?.moment_data) continue;
+        for (const val of radial.moment_data) {
+          if (val === null || val === undefined) continue;
+          if (val < 0) {
+            if (maxInboundVel === null || val < maxInboundVel) maxInboundVel = val;
+          } else {
+            if (maxOutboundVel === null || val > maxOutboundVel) maxOutboundVel = val;
+          }
+        }
+      }
+    }
+  } catch { /* ignore */ }
+
+  return { vcp, elevationAngle, maxRef, gatesAbove50, gatesAbove60, maxInboundVel, maxOutboundVel };
+}
+
+/**
  * Full decode + render pipeline. Works in both main thread and worker.
  * Requires: pako, Buffer, Level2Radar available in scope.
  *

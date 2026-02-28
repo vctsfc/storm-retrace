@@ -435,6 +435,7 @@ export class PrefetchManager {
         siteLat: result.siteLat!,
         siteLon: result.siteLon!,
         rangeKm: result.rangeKm!,
+        stats: result.frameStats,
       });
 
       // 6. Store elevations metadata if available

@@ -64,6 +64,8 @@ export function RadarLayer() {
     if (frame) {
       updateMapImage(currentMap, frame);
       lastRenderedRef.current = cacheKey;
+      // Push frame stats to store for the attributes overlay
+      useRadarStore.getState().setCurrentFrameStats(frame.stats ?? null);
     }
     // If not cached, prefetchManager is working on it and will notify us via onFrameReady
   }, []);

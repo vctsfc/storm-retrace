@@ -26,6 +26,7 @@ import {
   parseRadarBuffer,
   renderFromParsed,
   detectSailsElevations,
+  computeFrameStats,
   CANVAS_SIZE,
   type ParsedRadarData,
 } from './renderLogic';
@@ -73,6 +74,16 @@ export interface WorkerResponse {
     sweepTimestamp?: number;
     /** Number of sweeps detected at this elevation */
     sweepCount?: number;
+    /** Frame statistics for storm attributes overlay */
+    frameStats?: {
+      vcp: number;
+      elevationAngle: number;
+      maxRef: number | null;
+      gatesAbove50: number;
+      gatesAbove60: number;
+      maxInboundVel: number | null;
+      maxOutboundVel: number | null;
+    };
   };
 }
 
@@ -207,6 +218,9 @@ self.onmessage = async (e: MessageEvent<WorkerRequest>) => {
     const blob = await (result.canvas as OffscreenCanvas).convertToBlob({ type: 'image/png' });
     const imageBuffer = await blob.arrayBuffer();
 
+    // Compute frame stats for the storm attributes overlay
+    const frameStats = computeFrameStats(parsed.radar, parsed.vcp, result.elevation);
+
     const response: WorkerResponse = {
       id,
       type: 'frame-ready',
@@ -224,6 +238,7 @@ self.onmessage = async (e: MessageEvent<WorkerRequest>) => {
         siteId: result.siteId,
         sweepTimestamp: result.sweepTimestamp,
         sweepCount: result.sweepCount,
+        frameStats,
       },
     };
 
