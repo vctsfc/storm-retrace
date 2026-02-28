@@ -1,17 +1,23 @@
 /**
  * GPX file import UI.
  *
- * Provides a file picker button and drag-and-drop zone for importing
- * GPS chase tracks in GPX format. Lists imported tracks with color
- * dots and remove buttons.
+ * Provides two import modes:
+ * 1. **Folder browser** (Electron only): Point the app at a folder of GPX files,
+ *    browse the list, and click to load. Folder path persists across sessions.
+ * 2. **File picker / drag-and-drop** (all environments): Manual file selection.
+ *
+ * Lists imported tracks with color dots and remove buttons.
  */
 
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
 import { useTrackStore, getNextTrackColor } from '../../stores/trackStore';
 import { getPublicAssetUrl } from '../../utils/baseUrl';
 import { useRadarStore, type NexradSite } from '../../stores/radarStore';
 import { parseGPX, type TrackPoint } from '../../services/gps/gpxParser';
 import { findNearestSite } from '../../utils/geo';
+
+const GPX_FOLDER_KEY = 'gpx-folder-path';
+const isElectron = !!window.electronAPI?.isElectron;
 
 /**
  * Stations cache: loaded once from the stations GeoJSON and reused for
@@ -120,6 +126,27 @@ async function autoSetEventFromTrack(allPoints: TrackPoint[]): Promise<void> {
   window.dispatchEvent(new CustomEvent('gpx-event-auto-set'));
 }
 
+/** Format bytes as human-readable string */
+function formatSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+/** Format timestamp as short date string */
+function formatDate(ms: number): string {
+  const d = new Date(ms);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+/** Truncate a folder path for display */
+function truncatePath(p: string, maxLen: number = 30): string {
+  if (p.length <= maxLen) return p;
+  const parts = p.split('/');
+  if (parts.length <= 3) return '...' + p.slice(-maxLen);
+  return parts[0] + '/.../' + parts.slice(-2).join('/');
+}
+
 export function GPXImport() {
   const tracks = useTrackStore((s) => s.tracks);
   const addTrack = useTrackStore((s) => s.addTrack);
@@ -129,6 +156,100 @@ export function GPXImport() {
   const [dragOver, setDragOver] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Folder browser state (Electron only)
+  const [folderPath, setFolderPath] = useState<string | null>(() => {
+    try { return localStorage.getItem(GPX_FOLDER_KEY); } catch { return null; }
+  });
+  const [gpxFiles, setGpxFiles] = useState<GPXFileInfo[]>([]);
+  const [loadedFiles, setLoadedFiles] = useState<Set<string>>(new Set());
+  const [loadingFile, setLoadingFile] = useState<string | null>(null);
+
+  /** Scan the folder for GPX files */
+  const refreshFileList = useCallback(async (path: string) => {
+    if (!window.electronAPI) return;
+    try {
+      const files = await window.electronAPI.listGPXFiles(path);
+      setGpxFiles(files);
+    } catch {
+      setGpxFiles([]);
+    }
+  }, []);
+
+  // On mount, if we have a saved folder path, load the file list
+  useEffect(() => {
+    if (isElectron && folderPath) {
+      refreshFileList(folderPath);
+    }
+  }, [folderPath, refreshFileList]);
+
+  /** Pick a folder via native dialog */
+  const handleSelectFolder = useCallback(async () => {
+    if (!window.electronAPI) return;
+    const selected = await window.electronAPI.selectGPXFolder();
+    if (selected) {
+      setFolderPath(selected);
+      try { localStorage.setItem(GPX_FOLDER_KEY, selected); } catch { /* ignore */ }
+      refreshFileList(selected);
+    }
+  }, [refreshFileList]);
+
+  /** Process parsed GPX data (shared between folder load and file picker) */
+  const processGPXText = useCallback(
+    (text: string, fileName: string) => {
+      const parsed = parseGPX(text);
+      const allPoints: TrackPoint[] = [];
+
+      for (const parsedTrack of parsed) {
+        const trackCount = useTrackStore.getState().tracks.length;
+        const color = getNextTrackColor(trackCount);
+        const name =
+          parsedTrack.name ?? fileName.replace(/\.gpx$/i, '') ?? 'Unnamed Track';
+
+        addTrack({
+          id: crypto.randomUUID(),
+          name,
+          color,
+          points: parsedTrack.points,
+          visible: true,
+        });
+
+        allPoints.push(...parsedTrack.points);
+
+        console.log(
+          `[GPX] Imported "${name}" — ${parsedTrack.points.length} points, color ${color}`,
+        );
+      }
+
+      if (allPoints.length > 0) {
+        allPoints.sort((a, b) => a.time - b.time);
+        autoSetEventFromTrack(allPoints);
+      }
+    },
+    [addTrack],
+  );
+
+  /** Load a GPX file from the folder via IPC */
+  const handleLoadFile = useCallback(
+    async (file: GPXFileInfo) => {
+      if (!window.electronAPI) return;
+      setError(null);
+      setLoadingFile(file.path);
+      try {
+        const text = await window.electronAPI.readGPXFile(file.path);
+        processGPXText(text, file.name);
+        setLoadedFiles((prev) => new Set(prev).add(file.path));
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : 'Failed to read GPX file';
+        setError(msg);
+        console.error('[GPX] Read error:', err);
+      } finally {
+        setLoadingFile(null);
+      }
+    },
+    [processGPXText],
+  );
+
+  /** Import a file from the file picker or drag-and-drop */
   const importFile = useCallback(
     (file: File) => {
       setError(null);
@@ -141,38 +262,7 @@ export function GPXImport() {
       const reader = new FileReader();
       reader.onload = () => {
         try {
-          const text = reader.result as string;
-          const parsed = parseGPX(text);
-
-          // Collect all points across all tracks for time range + location analysis
-          const allPoints: TrackPoint[] = [];
-
-          for (const parsedTrack of parsed) {
-            const trackCount = useTrackStore.getState().tracks.length;
-            const color = getNextTrackColor(trackCount);
-            const name =
-              parsedTrack.name ?? file.name.replace(/\.gpx$/i, '') ?? 'Unnamed Track';
-
-            addTrack({
-              id: crypto.randomUUID(),
-              name,
-              color,
-              points: parsedTrack.points,
-              visible: true,
-            });
-
-            allPoints.push(...parsedTrack.points);
-
-            console.log(
-              `[GPX] Imported "${name}" — ${parsedTrack.points.length} points, color ${color}`,
-            );
-          }
-
-          // Sort all collected points by time and auto-set event date/time/site
-          if (allPoints.length > 0) {
-            allPoints.sort((a, b) => a.time - b.time);
-            autoSetEventFromTrack(allPoints);
-          }
+          processGPXText(reader.result as string, file.name);
         } catch (err) {
           const msg = err instanceof Error ? err.message : 'Failed to parse GPX file';
           setError(msg);
@@ -184,7 +274,7 @@ export function GPXImport() {
       };
       reader.readAsText(file);
     },
-    [addTrack],
+    [processGPXText],
   );
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -217,6 +307,62 @@ export function GPXImport() {
 
   return (
     <div className="gpx-import-section">
+      {/* ── Folder browser (Electron only) ── */}
+      {isElectron && (
+        <div className="gpx-folder-section">
+          {folderPath ? (
+            <>
+              <div className="gpx-folder-header">
+                <span className="gpx-folder-path" title={folderPath}>
+                  {truncatePath(folderPath)}
+                </span>
+                <button className="gpx-folder-change-btn" onClick={handleSelectFolder}>
+                  Change
+                </button>
+              </div>
+
+              {gpxFiles.length === 0 ? (
+                <div className="gpx-folder-empty">No .gpx files found</div>
+              ) : (
+                <div className="gpx-file-list">
+                  {gpxFiles.map((file) => {
+                    const isLoaded = loadedFiles.has(file.path);
+                    const isLoading = loadingFile === file.path;
+                    return (
+                      <div
+                        key={file.path}
+                        className={`gpx-file-item${isLoaded ? ' loaded' : ''}`}
+                      >
+                        <div className="gpx-file-info">
+                          <span className="gpx-file-name" title={file.name}>
+                            {file.name.replace(/\.gpx$/i, '')}
+                          </span>
+                          <span className="gpx-file-meta">
+                            {formatSize(file.size)} · {formatDate(file.modified)}
+                          </span>
+                        </div>
+                        <button
+                          className="gpx-file-load-btn"
+                          onClick={() => handleLoadFile(file)}
+                          disabled={isLoading}
+                        >
+                          {isLoading ? '...' : isLoaded ? '✓' : 'Load'}
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </>
+          ) : (
+            <button className="gpx-folder-btn" onClick={handleSelectFolder}>
+              Set GPX Folder
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* ── File picker / drag-and-drop (always available) ── */}
       <div
         className={`gpx-drop-zone${dragOver ? ' drag-over' : ''}`}
         onDragOver={onDragOver}

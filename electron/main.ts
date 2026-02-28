@@ -6,8 +6,9 @@
  * Origin headers for IEM requests to avoid CORS issues.
  */
 
-import { app, BrowserWindow, session } from 'electron';
+import { app, BrowserWindow, session, ipcMain, dialog } from 'electron';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -75,6 +76,46 @@ function createWindow() {
     mainWindow = null;
   });
 }
+
+// ── GPX folder IPC handlers ──
+
+ipcMain.handle('select-gpx-folder', async () => {
+  const result = await dialog.showOpenDialog({
+    properties: ['openDirectory'],
+    title: 'Select GPX Folder',
+  });
+  if (result.canceled || result.filePaths.length === 0) return null;
+  return result.filePaths[0];
+});
+
+ipcMain.handle('list-gpx-files', (_event, folderPath: string) => {
+  try {
+    const entries = fs.readdirSync(folderPath, { withFileTypes: true });
+    const gpxFiles = entries
+      .filter((e) => e.isFile() && e.name.toLowerCase().endsWith('.gpx'))
+      .map((e) => {
+        const fullPath = path.join(folderPath, e.name);
+        const stat = fs.statSync(fullPath);
+        return {
+          name: e.name,
+          path: fullPath,
+          size: stat.size,
+          modified: stat.mtimeMs,
+        };
+      })
+      .sort((a, b) => b.modified - a.modified); // newest first
+    return gpxFiles;
+  } catch {
+    return [];
+  }
+});
+
+ipcMain.handle('read-gpx-file', (_event, filePath: string) => {
+  if (!filePath.toLowerCase().endsWith('.gpx')) {
+    throw new Error('Only .gpx files can be read');
+  }
+  return fs.readFileSync(filePath, 'utf-8');
+});
 
 // ── App lifecycle ──
 

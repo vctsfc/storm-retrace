@@ -6,8 +6,11 @@
  * the Electron environment and adjust behavior accordingly.
  */
 
-const { contextBridge } = require('electron');
+const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
   isElectron: true,
+  selectGPXFolder: () => ipcRenderer.invoke('select-gpx-folder'),
+  listGPXFiles: (folderPath) => ipcRenderer.invoke('list-gpx-files', folderPath),
+  readGPXFile: (filePath) => ipcRenderer.invoke('read-gpx-file', filePath),
 });

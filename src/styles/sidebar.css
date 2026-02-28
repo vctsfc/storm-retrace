@@ -389,6 +389,144 @@
   padding-top: 10px;
 }
 
+/* ── GPX Folder Browser (Electron only) ────────────────────────── */
+
+.gpx-folder-section {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.gpx-folder-btn {
+  width: 100%;
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.gpx-folder-btn:hover {
+  background: var(--accent);
+  color: #000;
+  border-color: var(--accent);
+}
+
+.gpx-folder-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.gpx-folder-path {
+  flex: 1;
+  min-width: 0;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gpx-folder-change-btn {
+  font-size: 10px;
+  padding: 2px 8px;
+  flex-shrink: 0;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.gpx-folder-change-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--text-secondary);
+}
+
+.gpx-folder-empty {
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 6px 0;
+}
+
+.gpx-file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.gpx-file-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  border-radius: 3px;
+  transition: background 0.1s;
+}
+
+.gpx-file-item:hover {
+  background: var(--bg-tertiary);
+}
+
+.gpx-file-item.loaded {
+  opacity: 0.55;
+}
+
+.gpx-file-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.gpx-file-name {
+  font-size: 12px;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gpx-file-meta {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.gpx-file-load-btn {
+  font-size: 10px;
+  padding: 2px 8px;
+  flex-shrink: 0;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  min-width: 36px;
+  text-align: center;
+}
+
+.gpx-file-load-btn:hover {
+  background: var(--accent);
+  color: #000;
+  border-color: var(--accent);
+}
+
+.gpx-file-load-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* ── GPX Import / Chase Tracks ──────────────────────────────────── */
 
 .gpx-drop-zone {
