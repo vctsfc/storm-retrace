@@ -31,7 +31,7 @@ export function StormAttributesOverlay() {
       <div className="storm-attrs-title">Storm Attributes</div>
       <div className="storm-attrs-grid">
         <span className="storm-attrs-label">VCP</span>
-        <span className="storm-attrs-value">{stats.vcp || '—'}</span>
+        <span className="storm-attrs-value">{typeof stats.vcp === 'number' ? stats.vcp : '—'}</span>
 
         <span className="storm-attrs-label">Max REF</span>
         <span className="storm-attrs-value storm-attrs-ref">{maxRefStr}</span>

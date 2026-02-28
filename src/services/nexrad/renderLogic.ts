@@ -640,7 +640,7 @@ export function parseRadarBuffer(
 
     const header = radar.header ?? {};
     const siteId = header.icao ?? header.ICAO ?? '';
-    const vcp = radar.vcp ?? 0;
+    const vcp = typeof radar.vcp === 'number' ? radar.vcp : 0;
     const elevationIndices = radar.listElevations?.() ?? [];
     const radarData = radar.data;
 
@@ -906,7 +906,7 @@ export function decodeAndRender(
     // 3. Extract metadata
     const header = radar.header ?? {};
     const siteId = header.icao ?? header.ICAO ?? '';
-    const vcp = radar.vcp ?? 0;
+    const vcp = typeof radar.vcp === 'number' ? radar.vcp : 0;
     const elevationIndices = radar.listElevations?.() ?? [];
     const radarData = radar.data;
     const elevations = elevationIndices.map((idx: number) => {

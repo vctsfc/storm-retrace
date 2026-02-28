@@ -34,7 +34,7 @@ export async function decodeScan(buffer: ArrayBuffer): Promise<DecodedScan> {
 
   const header = radar.header ?? {};
   const siteId = header.icao ?? header.ICAO ?? '';
-  const vcp = radar.vcp ?? 0;
+  const vcp = typeof radar.vcp === 'number' ? radar.vcp : 0;
   const elevationIndices = radar.listElevations?.() ?? [];
 
   // Extract physical elevation angles from the raw data records
