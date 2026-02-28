@@ -10,10 +10,15 @@ import { fetchLSRs } from '../services/overlays/lsrService';
 import { fetchNearbyStations, fetchObservations } from '../services/overlays/asosService';
 
 /**
- * Format a UTC millisecond timestamp as YYYY-MM-DD for the outlook API.
+ * Format a UTC millisecond timestamp as the SPC convective-day date (YYYY-MM-DD).
+ *
+ * SPC convective days run 12Z–12Z. A storm at 02:00 UTC on May 21 belongs to
+ * the May 20 convective day. We subtract 12 hours before extracting the UTC
+ * date so that any timestamp between 12Z day-N and 12Z day-N+1 maps to day-N.
  */
-function formatUTCDate(ms: number): string {
-  const d = new Date(ms);
+function formatConvectiveDay(ms: number): string {
+  const TWELVE_HOURS_MS = 12 * 60 * 60 * 1000;
+  const d = new Date(ms - TWELVE_HOURS_MS);
   const y = d.getUTCFullYear();
   const mo = String(d.getUTCMonth() + 1).padStart(2, '0');
   const day = String(d.getUTCDate()).padStart(2, '0');
@@ -64,9 +69,8 @@ export function useTimeSyncedOverlays() {
           overlay.setLSRsLoading(true);
           overlay.setSurfaceObsLoading(true);
 
-          // Compute outlook date from event midpoint
-          const midpointMs = startMs + (endMs - startMs) / 2;
-          const outlookDate = formatUTCDate(midpointMs);
+          // Compute outlook date from event start (convective day = 12Z–12Z)
+          const outlookDate = formatConvectiveDay(startMs);
 
           // Fire all fetches concurrently — each handles its own success/error
           const warningsP = fetchWarnings(startMs, endMs)

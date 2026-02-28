@@ -72,6 +72,9 @@ export interface RadarState {
   /** Current frame statistics for the storm attributes overlay */
   currentFrameStats: FrameStats | null;
   setCurrentFrameStats: (stats: FrameStats | null) => void;
+  /** Whether to show the storm attributes overlay */
+  showStormAttributes: boolean;
+  setShowStormAttributes: (show: boolean) => void;
   /** Force a full re-render of all cached radar frames (bumps paletteVersion) */
   forceRerender: () => void;
 }
@@ -97,6 +100,8 @@ export const useRadarStore = create<RadarState>()(
 
       currentFrameStats: null,
       setCurrentFrameStats: (stats) => set({ currentFrameStats: stats }),
+      showStormAttributes: true,
+      setShowStormAttributes: (show) => set({ showStormAttributes: show }),
 
       setSelectedSite: (site) => set({ selectedSite: site }),
       setProduct: (product) => set({ product }),
@@ -139,6 +144,7 @@ export const useRadarStore = create<RadarState>()(
         radarSmoothing: state.radarSmoothing,
         paletteName: state.paletteName,
         customPalettes: state.customPalettes,
+        showStormAttributes: state.showStormAttributes,
       }),
       migrate: (persisted: any, version: number) => {
         if (version === 0) {

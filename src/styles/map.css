@@ -181,6 +181,12 @@
   pointer-events: auto;
   user-select: none;
   min-width: 150px;
+  cursor: grab;
+  touch-action: none;
+}
+
+.storm-attrs-overlay:active {
+  cursor: grabbing;
 }
 
 .storm-attrs-title {

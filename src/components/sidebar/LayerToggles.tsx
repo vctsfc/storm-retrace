@@ -28,6 +28,8 @@ export function LayerToggles() {
   // ── Radar ──
   const radarOpacity = useRadarStore((s) => s.radarOpacity);
   const setRadarOpacity = useRadarStore((s) => s.setRadarOpacity);
+  const showStormAttributes = useRadarStore((s) => s.showStormAttributes);
+  const setShowStormAttributes = useRadarStore((s) => s.setShowStormAttributes);
 
   // ── Outlooks ──
   const outlooksVisible = useOverlayStore((s) => s.outlooksVisible);
@@ -118,6 +120,14 @@ export function LayerToggles() {
             <span className="layer-toggle-label" style={{ fontSize: 12 }}>Radar</span>
             <OpacitySlider value={radarOpacity} onChange={setRadarOpacity} />
           </div>
+          <label className="layer-toggle-row sub-toggle">
+            <input
+              type="checkbox"
+              checked={showStormAttributes}
+              onChange={(e) => setShowStormAttributes(e.target.checked)}
+            />
+            <span className="layer-toggle-label">Storm attributes</span>
+          </label>
         </div>
 
         {/* ── Outlooks ── */}
