@@ -225,13 +225,46 @@ function drawDistanceBearingOverlay(
 
   const dist = typeof data.distanceMi === 'number' ? data.distanceMi : 0;
   const bearing = typeof data.bearingDeg === 'number' ? data.bearingDeg : 0;
-  const cardinal = data.cardinal ?? '';
 
-  drawRoundedRect(ctx, rect.x, rect.y, rect.width, rect.height, 6 * scale);
+  drawRoundedRect(ctx, rect.x, rect.y, rect.width, rect.height, 8 * scale);
 
   const centerX = rect.x + rect.width / 2;
 
-  // Distance value + unit
+  // ── Arrow (rotated by bearing) ──
+  const arrowSize = 40 * scale;
+  const arrowCenterX = centerX;
+  const arrowCenterY = rect.y + 10 * scale + arrowSize / 2;
+
+  ctx.save();
+  ctx.translate(arrowCenterX, arrowCenterY);
+  ctx.rotate((bearing * Math.PI) / 180);
+
+  // Draw upward-pointing arrow (0° = north)
+  const aW = arrowSize * 0.42; // half-width of arrowhead
+  const aH = arrowSize * 0.45; // arrowhead height
+  const sW = arrowSize * 0.16; // shaft half-width
+  const sH = arrowSize * 0.38; // shaft height
+
+  ctx.beginPath();
+  ctx.moveTo(0, -arrowSize / 2);             // tip
+  ctx.lineTo(aW, -arrowSize / 2 + aH);       // right wing
+  ctx.lineTo(sW, -arrowSize / 2 + aH);       // right notch
+  ctx.lineTo(sW, arrowSize / 2);              // bottom right
+  ctx.lineTo(-sW, arrowSize / 2);             // bottom left
+  ctx.lineTo(-sW, -arrowSize / 2 + aH);      // left notch
+  ctx.lineTo(-aW, -arrowSize / 2 + aH);      // left wing
+  ctx.closePath();
+
+  ctx.fillStyle = '#ffffff';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(0,0,0,0.4)';
+  ctx.lineWidth = 1 * scale;
+  ctx.stroke();
+
+  ctx.restore();
+
+  // ── Distance value + unit ──
+  const distY = rect.y + 10 * scale + arrowSize + 6 * scale;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
   ctx.font = `700 ${28 * scale}px ${FONT_MONO}`;
@@ -239,8 +272,7 @@ function drawDistanceBearingOverlay(
   const distStr = dist.toFixed(1);
   const distMetrics = ctx.measureText(distStr);
 
-  // Draw distance number
-  ctx.fillText(distStr, centerX - 8 * scale, rect.y + 12 * scale);
+  ctx.fillText(distStr, centerX - 8 * scale, distY);
 
   // Unit "mi" to the right
   ctx.font = `${14 * scale}px ${FONT_MONO}`;
@@ -249,19 +281,14 @@ function drawDistanceBearingOverlay(
   ctx.fillText(
     'mi',
     centerX - 8 * scale + distMetrics.width / 2 + 3 * scale,
-    rect.y + 12 * scale + 14 * scale,
+    distY + 14 * scale,
   );
 
-  // Bearing
+  // ── Label ──
   ctx.textAlign = 'center';
-  ctx.font = `${17 * scale}px ${FONT_MONO}`;
-  ctx.fillStyle = ACCENT;
-  ctx.fillText(`${Math.round(bearing)}° ${cardinal}`, centerX, rect.y + 46 * scale);
-
-  // Label
   ctx.font = `${10 * scale}px ${FONT_SANS}`;
   ctx.fillStyle = TEXT_MUTED;
-  ctx.fillText('CHASER → STORM', centerX, rect.y + 68 * scale);
+  ctx.fillText('CHASER → STORM', centerX, distY + 36 * scale);
 
   ctx.textAlign = 'left'; // reset
 }

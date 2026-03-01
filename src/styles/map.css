@@ -236,20 +236,34 @@
   bottom: 28px;
   right: 12px;
   z-index: 5;
-  background: rgba(13, 17, 23, 0.82);
+  background: rgba(13, 17, 23, 0.85);
   backdrop-filter: blur(6px);
   border: 1px solid var(--border-color);
-  border-radius: 6px;
-  padding: 12px 18px;
+  border-radius: 8px;
+  padding: 10px 20px 12px;
   pointer-events: auto;
   user-select: none;
   text-align: center;
   cursor: grab;
   touch-action: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
 }
 
 .distance-bearing-overlay:active {
   cursor: grabbing;
+}
+
+.distance-bearing-arrow {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.5));
 }
 
 .distance-bearing-distance {
@@ -267,17 +281,10 @@
   margin-left: 2px;
 }
 
-.distance-bearing-bearing {
-  font-size: 17px;
-  font-family: var(--font-mono);
-  color: var(--accent);
-  margin-top: 3px;
-}
-
 .distance-bearing-label {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--text-muted);
-  margin-top: 5px;
+  margin-top: 2px;
 }
